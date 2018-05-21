@@ -1,0 +1,39 @@
+# Deutsch Sprachpaket
+# Das hier ist die Sprachdatei des jeweiligen Servers.
+# Alle Farbcodes können mit "&" geschrieben werden 
+
+
+# Der Prefix des Plugins.
+prefix: "&8[&4BanSystem&8] "
+
+mysql:
+  # Verbindung zur MySQL aufgebaut
+  connected: "&fMySQL-Verbindung &aerfolgreich aufgebaut"
+  # Verbindung zur MySQL getrennt
+  disconnected: "&fMySQL-Verbindung &aerfolgreich &cgetrennt"
+  
+ban:
+  # Unban-Message
+  unban: "&7Du hast den &2Spieler&a [name] &7erfolgreich &centbannt&7."
+  # Target hat Ignore-Permission
+  ignore: "&cDu kannst diesen Spieler nicht bannen."
+  # Selbstbanversuch
+  self: "&cDu kannst dich nicht selbst muten."
+  
+mute:
+  # Unmute-Message
+  unmute: "&7Du hast den &2Spieler&a [name] &7erfolgreich &centmutet&7."
+  # Target hat Ignore-Permission
+  ignore: "&cDu kannst diesen Spieler nicht muten."
+  # Selbstmuteversuch
+  self: "&cDu kannst dich nicht selbst muten."
+
+error:
+  # Keine Permission
+  permissions: "&cDu hast nich die benötigte Berechtigung, diesen Befehl auszuführen."
+  # Ist nicht gebannt
+  notBanned: "&cDieser Spieler ist nicht gebannt."
+  # Ist nicht gemutet
+  notMuted: "&cDieser Spieler ist nicht gemutet"
+  # Falsch geschriebener Befehl
+  falseCommand: "&7Meintest du vielleicht&6 [command]&7?"

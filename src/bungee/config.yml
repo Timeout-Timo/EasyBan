@@ -1,0 +1,17 @@
+# BanSystem Proxy Configuration
+# Version 1.0
+# Author: Timeout
+
+# Das hier inst die Konfigurationsdatei für das BanSystem allgemein.
+# Hier können verschiedene Einstellungen gemacht werden.
+
+# Sprache des Systems
+language: de_DE
+
+# MySQL-Settings
+mysql:
+  host: "localhost"
+  port: 3306
+  database: "BanSystem"
+  username: "Username"
+  password: "Password"

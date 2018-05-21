@@ -1,0 +1,36 @@
+name: BanSystem-GUI
+author: Timeout
+version: 1.0
+description: Eine GUI für das Bansystem
+
+main: de.timeout.bukkit.ban.BanGUI
+
+commands:
+  ban:
+    description: Bant einen Spieler
+  mute:
+    description: Mutet einen Spieler
+  addreason:
+    description: Fügt eine Reason hinzu
+  unban:
+    description: Entbannt einen Spieler
+  unmute:
+    description: Entmutet einen Spieler
+
+permissions:
+  griefking.ban:
+    description: Die GUI-Ban Permission
+  griefking.permaban:
+    description: Die GUI-PermaBan Permission
+  griefking.customban:
+    description: Die GUI-CustomBan Permission
+  griefking.mute:
+    description: Die GUI-Mute Permission
+  griefking.permamute:
+    description: Die GUI-PermaMute Permission
+  griefking.custommute:
+    description: Die GUI-CustomMute Permission
+  griefking.unmute:
+    description: Die Unmute-Permission
+  griefking.unban:
+    description: Die Unban-Permission

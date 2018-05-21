@@ -1,0 +1,86 @@
+package de.timeout.bungee.ban;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+
+import de.timeout.bungee.ban.manager.ExecutorManager;
+import de.timeout.bungee.ban.manager.WrapperManager;
+import de.timeout.bungee.ban.utils.TabCompleterManager;
+import de.timeout.utils.MySQL;
+import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
+
+public class BanSystem extends Plugin implements Listener {
+	
+	public static BanSystem plugin;
+	private static Configuration config;
+	
+	@Override
+	public void onEnable() {
+		plugin = this;
+		ConfigCreator.loadConfigurations();
+		reloadConfig();
+		
+		registerListener();
+		registerCommands();
+				
+		MySQL.connect(getConfig().getString("mysql.host"), getConfig().getInt("mysql.port"),
+				getConfig().getString("mysql.database"), getConfig().getString("mysql.username"), getConfig().getString("mysql.password"));
+		setupMySQL();
+		BungeeCord.getInstance().registerChannel("BanSystem");
+	}
+
+	@Override
+	public void onDisable() {
+		MySQL.disconnect();
+	}
+	
+	private void registerListener() {
+		BungeeCord.getInstance().getPluginManager().registerListener(this, new WrapperManager());
+		BungeeCord.getInstance().getPluginManager().registerListener(this, new ExecutorManager());
+		BungeeCord.getInstance().getPluginManager().registerListener(this, new TabCompleterManager());
+	}
+	
+	private void registerCommands() {
+		
+	}
+		
+	private void setupMySQL() {
+		try {
+			MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS Settings(Name VARCHAR(100), FirstBan BIGINT, SecondBan BIGINT, ThirdBan BIGINT, First BIGINT, Second BIGINT, Points BIGINT, Type VARCHAR(100), Display VARCHAR(100), Title TEXT)").executeUpdate();
+			MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS History(UUID VARCHAR(100), Violence BIGINT)").executeUpdate();
+			MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS Bans(UUID VARCHAR(100), IP VARCHAR(100), Name VARCHAR(100), Reason VARCHAR(100), Unban BIGINT, Banner VARCHAR(100))").executeUpdate();
+			MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS Mutes(UUID VARCHAR(100), IP VARCHAR(100), Name VARCHAR(100), Reason VARCHAR(100), Unmute BIGINT, Muter VARCHAR(100))").executeUpdate();
+		} catch (SQLException e) {}
+	}
+	
+	public void reloadConfig() {
+		if(config == null) {
+			try {
+				config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
+			} catch (IOException e) {e.printStackTrace();}
+		}
+	}
+	
+	public Configuration getConfig() {
+		reloadConfig();
+		return config;
+	}
+	
+	public void saveConfig() {
+		try {
+			ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, new File(getDataFolder(), "config.yml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getLanguage(String path) {
+		return ConfigManager.getLanguage().getString(path).replaceAll("&", "§");
+	}
+}
