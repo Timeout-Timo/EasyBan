@@ -6,26 +6,34 @@
 # Hier könnt ihr unterschiedlichste Einstellungen vornehmen um eure Nachrichten anzupassen.
 
 # Der Prefix des Systems
-prefix: "&8[&4BanSystem&8] "
+prefix: "&8[&4EasyBan&8] "
 
 ban:
+  # Wird dem gebannten Spieler 
   screen:
   - "&cDu wurdest von diesem Netzwerk gebannt."
   - "&cZeit bis zum Ablauf:&e [date]"
   - "&cGrund:&e [reason]"
   - "&cGebannt von:&e [banner]"
   - "&cDu kannst einen Entbannungsantrag auf dem TS stellen."
+  # Bestätigung des Banners
   success: "&7Du hast den &4Spieler&c [name] &aerfolgreich &cgebannt."
+  # Reason beim Permaban
   perma: "&cDie Serverleitung hat keine Lust auf dein Verhalten!"
+  # Reason beim Custom-Ban
   custom: "&cDas Team hat sich für eine besondere Strafe entschieden."
 
 mute:
+  # Wird dem gemuteten Spieler angezeigt
   screen:
   - "&cDu wurdest auf diesem Netzwerk gemutet."
   - "&cZeit bin zum Ablauf:&e [date]"
   - "&cGrund:&e [reason]"
   - "&cGemutet von:&e [muter]"
   - "&cDu kannst einen Entmutungsantrag auf dem TS stellen."
+  # Bestätigung des Muters
   success: "&7Du hast den &4Spieler&c [name] &aerfolgreich &cgemutet."
+  # Reason beim PermaMute
   perma: "&cDie Serverleitung hat keine Lust auf dein Verhalten"
+  # Reason beim CustomMute
   custom: "&cDas Team hat sich für eine besondere Strafe entschieden."

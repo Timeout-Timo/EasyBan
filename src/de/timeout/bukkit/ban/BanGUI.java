@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.timeout.bukkit.ban.commands.AddreasonCommand;
 import de.timeout.bukkit.ban.commands.BanCommand;
+import de.timeout.bukkit.ban.commands.DelreasonCommand;
 import de.timeout.bukkit.ban.commands.MuteCommand;
 import de.timeout.bukkit.ban.commands.UnbanCommand;
 import de.timeout.bukkit.ban.commands.UnmuteCommand;
@@ -55,6 +56,7 @@ public class BanGUI extends JavaPlugin {
 		this.getCommand("ban").setExecutor(new BanCommand());
 		this.getCommand("mute").setExecutor(new MuteCommand());
 		this.getCommand("addreason").setExecutor(new AddreasonCommand());
+		this.getCommand("delreason").setExecutor(new DelreasonCommand());
 		this.getCommand("unban").setExecutor(new UnbanCommand());
 		this.getCommand("unmute").setExecutor(new UnmuteCommand());
 	}

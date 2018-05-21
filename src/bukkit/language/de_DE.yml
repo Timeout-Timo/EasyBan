@@ -4,7 +4,7 @@
 
 
 # Der Prefix des Plugins.
-prefix: "&8[&4BanSystem&8] "
+prefix: "&8[&4EasyBan&8] "
 
 mysql:
   # Verbindung zur MySQL aufgebaut
@@ -27,6 +27,12 @@ mute:
   ignore: "&cDu kannst diesen Spieler nicht muten."
   # Selbstmuteversuch
   self: "&cDu kannst dich nicht selbst muten."
+
+delreason:
+  # Erfolgreich gelöscht
+  success: "&7Du hast die &2Reason&a [reason] &7erfolgreich &cgelöscht&7."
+  # Reason existiert nicht
+  notExists: "&cDie angegebene Reason existiert nicht."
 
 error:
   # Keine Permission

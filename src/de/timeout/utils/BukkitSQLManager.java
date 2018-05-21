@@ -227,4 +227,26 @@ public class BukkitSQLManager {
 		}
 		return null;
 	}
+	
+	public static void removeReason(String name) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("DELETE FROM Settings WHERE Name = ?");
+			ps.setString(1, name);
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static boolean reasonExists(String name) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Name FROM Settings WHERE Name = ?");
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+			return rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

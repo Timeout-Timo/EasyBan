@@ -1,0 +1,45 @@
+# English Languagepack
+# This is the english translationscript for this plugin.
+# All ColorCodes must be written with '&' insteadof '§'
+# My English-Skills are very bad. Please excuse me if something is wrong. I'm a german.
+
+# Prefix of this Plugin
+prefix: "&8[&4EasyBan&8] "
+
+mysql:
+  # MySQL is Connected
+  connected: "&fMySQL-Connection &asucessfully enabled"
+  # MySQL is Disconnected
+  disconnected: "&fMySQL-Connection &asuccessfully &cdisabled"
+  
+ban:
+  # Unban-Message
+  unban: "&7You have unbanned&a [name] &7sucessful."
+  # Target has ignore permission
+  ignore: "&cYou cannot ban this Player."
+  # Ban yourself
+  self: "&cYou cannot ban yourself."
+  
+mute:
+  # Unmute-Message
+  unmute: "&7You have unmuted&a [name] &7successful."
+  # Target has ignore permission
+  ignore: "&cYou cannot mute this Player."
+  # Mute yourself
+  self: "&cYou cannot mute yourself."
+  
+delreason:
+  # Deleted successfully
+  success: "&7You have &cdeleted &7the &2Reason&a [reason] &7successfully."
+  # Reason doesn't exist
+  notExists: "&cThis Reason doesn't exist."
+  
+error:
+  # No Permission
+  permissions: "&cYou are not permited to execute this command."
+  # Isn't banned
+  notBanned: "&cThis player isn't banned."
+  # Isn't muted
+  notMuted: "&cThis player isn't muted."
+  # False command arguments
+  falseCommand: "&7May you mean&6 [command]&7?"

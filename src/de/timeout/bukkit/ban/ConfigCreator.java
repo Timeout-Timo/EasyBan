@@ -12,12 +12,12 @@ import com.google.common.io.ByteStreams;
 
 public class ConfigCreator {
 
-	
 	private static BanGUI main = BanGUI.plugin;
 	
 	public static void loadConfigs() {
 		loadResource(main, "bukkit/config.yml");
 		loadResource(main, "bukkit/language/de_DE.yml");
+		loadResource(main, "bukkit/language/en_US.yml");
 	}
 	
 	private static void loadResource(Plugin plugin, String resource) {

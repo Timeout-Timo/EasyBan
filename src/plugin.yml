@@ -12,25 +12,27 @@ commands:
     description: Mutet einen Spieler
   addreason:
     description: Fügt eine Reason hinzu
+  delreason:
+    description: Entfernt eine Reason
   unban:
     description: Entbannt einen Spieler
   unmute:
     description: Entmutet einen Spieler
 
 permissions:
-  griefking.ban:
+  easyban.ban:
     description: Die GUI-Ban Permission
-  griefking.permaban:
+  easyban.permaban:
     description: Die GUI-PermaBan Permission
-  griefking.customban:
+  easyban.customban:
     description: Die GUI-CustomBan Permission
-  griefking.mute:
+  easyban.mute:
     description: Die GUI-Mute Permission
-  griefking.permamute:
+  easyban.permamute:
     description: Die GUI-PermaMute Permission
-  griefking.custommute:
+  easyban.custommute:
     description: Die GUI-CustomMute Permission
-  griefking.unmute:
+  easyban.unmute:
     description: Die Unmute-Permission
-  griefking.unban:
+  easyban.unban:
     description: Die Unban-Permission

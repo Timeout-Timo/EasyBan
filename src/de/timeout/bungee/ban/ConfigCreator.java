@@ -17,6 +17,7 @@ public class ConfigCreator {
 	public static void loadConfigurations() {
 		loadResource(main, "bungee/config.yml");
 		loadResource(main, "bungee/language/de_DE.yml");
+		loadResource(main, "bungee/language/en_US.yml");
 	}
 	
 	private static void loadResource(Plugin plugin, String resource) {
