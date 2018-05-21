@@ -1,7 +1,7 @@
-name: BanSystem-GUI
+name: EasyBan-GUI
 author: Timeout
-version: 1.0
-description: Eine GUI für das Bansystem
+version: 0.1-DEV
+description: A simple Ban and Mute Manager with GUI
 
 main: de.timeout.bukkit.ban.BanGUI
 

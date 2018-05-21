@@ -1,6 +1,6 @@
-name: BanSystem
+name: EasyBan
 author: Timeout
-version: 1.0
-description: Ein Bansystem für Griefking.de
+version: 0.1-DEV
+description: A simple Ban and Mute Manager with GUI
 
 main: de.timeout.bungee.ban.BanSystem
