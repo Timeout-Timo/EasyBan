@@ -1,6 +1,6 @@
 name: BanSystem-GUI
 author: Timeout
-version: 1.0
+version: 0.1-DEV
 description: Eine GUI für das Bansystem
 
 main: de.timeout.bukkit.ban.BanGUI
