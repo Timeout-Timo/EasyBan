@@ -1,6 +1,6 @@
 name: BanSystem
 author: Timeout
-version: 1.0
-description: Ein Bansystem für Griefking.de
+version: 0.1-DEV
+description: A simple BanManager with GUI
 
 main: de.timeout.bungee.ban.BanSystem
