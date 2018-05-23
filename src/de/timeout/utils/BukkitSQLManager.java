@@ -143,6 +143,18 @@ public class BukkitSQLManager {
 		return false;
 	}
 	
+	public static boolean isMuted(UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT UUID FROM Mutes WHERE UUID = ?");
+			ps.setString(1, uuid.toString());
+			ResultSet rs = ps.executeQuery();
+			return rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public static void unmute(UUID uuid) {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("DELETE FROM Mutes WHERE UUID = ?");
@@ -248,5 +260,45 @@ public class BukkitSQLManager {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public static boolean isIPBanned(String ip) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT IP FROM Bans WHERE IP = ?");
+			ps.setString(1, ip);
+			ResultSet rs = ps.executeQuery();
+			return rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static boolean isBanned(UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT UUID FROM Bans WHERE UUID = ?");
+			ps.setString(1, uuid.toString());
+			ResultSet rs = ps.executeQuery();
+			return rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public static ReasonType getType(String reasonname) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Type FROM Settings WHERE Name = ?");
+			ps.setString(1, reasonname);
+			ResultSet rs = ps.executeQuery();
+			String s = "";
+			while(rs.next()) {
+				s = rs.getString("Type");
+			}
+			return ReasonType.getTypeByName(s);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		throw new NullPointerException("Unknown ReasonTypeName");
 	}
 }

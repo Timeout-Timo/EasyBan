@@ -163,11 +163,10 @@ public class WrapperManager implements Listener {
 	}
 	
 	private ProxiedPlayer getProxiedPlayer(Connection con) {
-		for(ProxiedPlayer p : main.getProxy().getPlayers()) {
-			String ip = p.getPendingConnection().getAddress().getAddress().getHostAddress();
-			int port = p.getPendingConnection().getAddress().getPort();
-			if(ip.equalsIgnoreCase(con.getAddress().getHostName()) && port == con.getAddress().getPort())return p;
-		}
+		try {
+			ProxiedPlayer p = (ProxiedPlayer)con;
+			return p;
+		} catch(ClassCastException e) {}
 		return null;
 	}
 }

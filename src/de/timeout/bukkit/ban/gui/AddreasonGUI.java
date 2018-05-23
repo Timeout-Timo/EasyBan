@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import de.timeout.bukkit.ban.api.AddReasonEvent;
 import de.timeout.bukkit.ban.utils.AnvilGUI;
 import de.timeout.bukkit.ban.utils.ItemStackAPI;
 import de.timeout.bukkit.ban.utils.AnvilGUI.AnvilClickEvent;
@@ -82,11 +83,15 @@ public class AddreasonGUI implements Listener {
 										try {
 											long points = Long.valueOf(result);
 											BukkitReason reason = new BukkitReason(name, type, line1, line2, points, time1, time2, time3, display, title);
-											reason.saveToMySQL();
-											
-											deleteCache(p);
-											event.setWillClose(true);
-											event.setWillDestroy(true);
+											AddReasonEvent addEvent = new AddReasonEvent(reason);
+											Bukkit.getPluginManager().callEvent(addEvent);
+											if(!addEvent.isCancelled()) {
+												reason.saveToMySQL();
+												
+												deleteCache(p);
+												event.setWillClose(true);
+												event.setWillDestroy(true);
+											}
 										} catch(NumberFormatException e) {}
 									}
 								}
