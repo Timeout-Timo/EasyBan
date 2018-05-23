@@ -14,7 +14,7 @@ mysql:
   
 ban:
   # Unban-Message
-  unban: "&7You have unbanned&a [name] &7sucessful."
+  unban: "&7You have unbanned&a [name] &7sucessfully."
   # Target has ignore permission
   ignore: "&cYou cannot ban this Player."
   # Ban yourself
@@ -22,7 +22,7 @@ ban:
   
 mute:
   # Unmute-Message
-  unmute: "&7You have unmuted&a [name] &7successful."
+  unmute: "&7You have unmuted&a [name] &7successfully."
   # Target has ignore permission
   ignore: "&cYou cannot mute this Player."
   # Mute yourself
@@ -43,3 +43,5 @@ error:
   notMuted: "&cThis player isn't muted."
   # False command arguments
   falseCommand: "&7May you mean&6 [command]&7?"
+  # Connection to MySQL failed
+  sqlFailed: "MySQL-Connection is failed. Please check your MySQL-Settings. The Plugin will be disabled now."

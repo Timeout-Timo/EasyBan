@@ -29,21 +29,29 @@ public class BanGUI extends JavaPlugin {
 		ConfigCreator.loadConfigs();
 		config = new UTFConfig(new File(getDataFolder(), "config.yml"));
 		
-		registerCommands();
-		registerListener();
-		
+		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BanSystem");
+
 		//MySQL
 		MySQL.connect(getConfig().getString("mysql.host"), getConfig().getInt("mysql.port"), getConfig().getString("mysql.database"),
 				getConfig().getString("mysql.username"), getConfig().getString("mysql.password"));
-		if(MySQL.isConnected())Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("mysql.connected"));
-		setupMySQL();
-		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BanSystem");
+		if(MySQL.isConnected()) {
+			Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("mysql.connected"));
+			setupMySQL();
+			
+			registerCommands();
+			registerListener();
+		} else {
+			Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("error.sqlFailed"));
+			Bukkit.getPluginManager().disablePlugin(plugin);
+		}
 	}
 	
 	@Override
 	public void onDisable() {
-		MySQL.disconnect();
-		if(!MySQL.isConnected())Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("mysql.disconnected"));
+		if(MySQL.isConnected()) {
+			MySQL.disconnect();
+			Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("mysql.disconnected"));
+		}
 	}
 	
 	private void registerListener() {

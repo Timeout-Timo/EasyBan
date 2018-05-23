@@ -32,3 +32,11 @@ mute:
   perma: "&cThe Serverteam didn't want your incorrect behavior in the Chat."
   # Reason by custom ban
   custom: "&cThe Serverteam gave you a special mute."
+  
+mysql:
+  # Connected to MySQL
+  connected: "&7MySQL-Database Connection is &asucessfully connected&7."
+  # Disconnected to MySQL
+  disconnected: "&7MySQL-Database Connection is &asucessfully &cdisconnected&7."
+  # Connection failed
+  failed: "&cCould not connect to MySQL-Database. Please check up your MySQL-Settings in the config.yml. The Plugin will be disabled now."

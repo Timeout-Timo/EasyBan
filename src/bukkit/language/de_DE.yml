@@ -43,3 +43,5 @@ error:
   notMuted: "&cDieser Spieler ist nicht gemutet"
   # Falsch geschriebener Befehl
   falseCommand: "&7Meintest du vielleicht&6 [command]&7?"
+  # Fehler beim Verbinden zur MySQL
+  sqlFailed: "&cEs konnte keine Verbindung zur MySQL-Datenbank aufgebaut werden. Bitte überprüfen sie ihre Einstellungen. Dieses Plugin wird nun deaktiviert."

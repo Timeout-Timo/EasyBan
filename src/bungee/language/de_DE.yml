@@ -37,3 +37,11 @@ mute:
   perma: "&cDie Serverleitung hat keine Lust auf dein Verhalten"
   # Reason beim CustomMute
   custom: "&cDas Team hat sich für eine besondere Strafe entschieden."
+  
+mysql:
+  # Verbindung zur MySQL-Datenbank aufgebaut.
+  connected: "&fMySQL-Verbindung wurde &aerfolgreich aufgebaut&7."
+  # Verbindung zur MySQL-Datenbank getrennt.
+  disconnected: "&fMySQL-Verbindung wurde &aerfolgreich &cgetrennt."
+  # Fehler beim Verbinden
+  failed: "&cDie Verbindung zur MySQL-Datenbank konnte nicht aufgebaut werden. Bitte überprüfe deine Einstellungen in der config.yml. Das Plugin wird nun deaktiviert."

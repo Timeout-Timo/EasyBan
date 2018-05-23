@@ -9,6 +9,7 @@ import de.timeout.bungee.ban.manager.WrapperManager;
 import de.timeout.bungee.ban.utils.TabCompleterManager;
 import de.timeout.utils.MySQL;
 import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -26,13 +27,18 @@ public class BanSystem extends Plugin implements Listener {
 		ConfigCreator.loadConfigurations();
 		reloadConfig();
 		
-		registerListener();
-		registerCommands();
+		BungeeCord.getInstance().registerChannel("BanSystem");
 				
 		MySQL.connect(getConfig().getString("mysql.host"), getConfig().getInt("mysql.port"),
 				getConfig().getString("mysql.database"), getConfig().getString("mysql.username"), getConfig().getString("mysql.password"));
-		setupMySQL();
-		BungeeCord.getInstance().registerChannel("BanSystem");
+		if(MySQL.isConnected()) {
+			setupMySQL();
+			getProxy().getConsole().sendMessage(new TextComponent(getLanguage("prefix") + getLanguage("mysql.connected")));
+			registerListener();
+			registerCommands();
+		} else {
+			plugin.getProxy().getConsole().sendMessage(new TextComponent(getLanguage("prefix") + getLanguage("mysql.failed")));
+		}
 	}
 
 	@Override
