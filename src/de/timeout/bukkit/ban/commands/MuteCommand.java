@@ -25,13 +25,13 @@ public class MuteCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player)sender;
-			if(p.hasPermission("griefking.mute")) {
+			if(p.hasPermission("easyban.mute")) {
 				if(args.length == 1) {
 					String name = args[0];
 					if(!p.getName().equalsIgnoreCase(name)) {
 						OfflinePlayer t = Bukkit.getServer().getOfflinePlayer(name);
 						PermissibleBase base = new PermissibleBase(t);
-						if(!base.hasPermission("griefking.ignoremute"))MuteCommandGUI.openMuteMenu(p, name);
+						if(!base.hasPermission("easyban.ignoremute"))MuteCommandGUI.openMuteMenu(p, name);
 						else p.sendMessage(prefix + ignore);
 					} else p.sendMessage(prefix + self);
 				}
