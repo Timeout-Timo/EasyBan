@@ -45,3 +45,40 @@ error:
   falseCommand: "&7May you mean&6 [command]&7?"
   # Connection to MySQL failed
   sqlFailed: "MySQL-Connection is failed. Please check your MySQL-Settings. The Plugin will be disabled now."
+  
+gui:
+  reason:
+    inventory: "&aAdd &4Reason&c [name]"
+    time1: "&aStage 1"
+    time2: "&6Stage 2"
+    time3: "&4Stage 3"
+    mute: "&cA Mute-Reason"
+    ban: "&cA Ban-Reason"
+    line12: "&7Stage 2 will be activated at:"
+    line23: "&7Stage 3 will be activated at:"
+    timemenu: "&6Timesettings"
+    days: "&7Days"
+    hours: "&7Hours"
+    minutes: "&7Minutes"
+    perma: "&cPermanent"
+    back: "&cBack"
+    pointsraise: "Raise_Level"
+  ban:
+    inventory: "&cBan &7[name]?"
+    custom: "&cCustom-Ban"
+    mute: "&7To &6Mute"
+    days: " &aDays"
+    hours: " &aHours"
+    minutes: " &aMinutes"
+    confirm: "&cBan &aconfirm"
+    perma: "&cPermanent"
+  mute:
+    inventory: "&cMute &7[name]?"
+    custom: "&cCustom-Mute"
+    ban: "&7To &6Ban"
+    days: " &aDays"
+    hours: " &aHours"
+    minutes: " &aMinutes"
+    confirm: "&aConfirm Mute"
+    perma: "&cPermanent"
+    

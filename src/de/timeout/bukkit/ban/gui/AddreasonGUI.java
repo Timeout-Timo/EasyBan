@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import de.timeout.bukkit.ban.BanGUI;
 import de.timeout.bukkit.ban.api.AddReasonEvent;
 import de.timeout.bukkit.ban.utils.AnvilGUI;
 import de.timeout.bukkit.ban.utils.ItemStackAPI;
@@ -24,6 +25,24 @@ import de.timeout.utils.DateConverter;
 import de.timeout.utils.Reason.ReasonType;
 
 public class AddreasonGUI implements Listener {
+	
+	private static BanGUI main = BanGUI.plugin;
+	
+	private static String reasonInv = main.getLanguage("gui.reason.inventory");
+	private static String time1name = main.getLanguage("gui.reason.time1");
+	private static String time2name = main.getLanguage("gui.reason.time2");
+	private static String time3name = main.getLanguage("gui.reason.time3");
+	private static String mutename = main.getLanguage("gui.reason.mute");
+	private static String banname = main.getLanguage("gui.reason.ban");
+	private static String line12name = main.getLanguage("gui.reason.line12");
+	private static String line23name = main.getLanguage("gui.reason.line23");
+	private static String timemenuname = main.getLanguage("gui.reason.timemenu");
+	private static String daysname = main.getLanguage("gui.reason.days");
+	private static String hoursname = main.getLanguage("gui.reason.hours");
+	private static String minutesname = main.getLanguage("gui.reason.minutes");
+	private static String permaname = main.getLanguage("gui.reason.perma");
+	private static String backname = main.getLanguage("gui.reason.back");
+	private static String pointsraisename = main.getLanguage("gui.reason.pointsraise");
 	
 	private static HashMap<Player, String > nameCache = new HashMap<Player, String>();
 	private static HashMap<Player, String> displayCache = new HashMap<Player, String>();
@@ -58,7 +77,7 @@ public class AddreasonGUI implements Listener {
 			Player p = (Player) event.getWhoClicked();
 			try {
 				Inventory inv = event.getClickedInventory();
-				if(inv.getName().startsWith("§4Reason §c")) {
+				if(inv.getName().equalsIgnoreCase(reasonInv.replace("[name]", nameCache.get(p)))) {
 					event.setCancelled(true);
 					ItemStack item = event.getCurrentItem();
 					if(event.getSlot() == 22) {
@@ -96,7 +115,7 @@ public class AddreasonGUI implements Listener {
 									}
 								}
 							});
-							gui.setSlot(AnvilSlot.INPUT_LEFT, ItemStackAPI.createItemStack(title.getType(), 1, "§7Punkte pro Ausführung"));
+							gui.setSlot(AnvilSlot.INPUT_LEFT, ItemStackAPI.createItemStack(title.getType(), 1, pointsraisename));
 							gui.open();
 						} else p.playSound(p.getLocation(), Sound.NOTE_BASS, 1F, 1F);
 					} else if(item.getType() == Material.EMPTY_MAP) {
@@ -125,7 +144,7 @@ public class AddreasonGUI implements Listener {
 						p.updateInventory();
 					} else if(item.getType() == Material.PAPER) {
 						AnvilGUI gui;
-						ItemStack nametag = ItemStackAPI.createItemStack(Material.NAME_TAG, 1, "Zahl hier eingeben");
+						ItemStack nametag; 
 						switch(event.getSlot()) {
 						case 10:
 							gui = new AnvilGUI(p, new AnvilClickEventHandler() {
@@ -147,6 +166,7 @@ public class AddreasonGUI implements Listener {
 									event.setWillDestroy(false);
 								}
 							});
+							nametag = ItemStackAPI.createItemStack(Material.NAME_TAG, 1, line12name);
 							gui.setSlot(AnvilSlot.INPUT_LEFT, nametag);
 							gui.open();
 							break;
@@ -170,6 +190,7 @@ public class AddreasonGUI implements Listener {
 									event.setWillDestroy(false);
 								}
 							});
+							nametag = ItemStackAPI.createItemStack(Material.NAME_TAG, 1, line23name);
 							gui.setSlot(AnvilSlot.INPUT_LEFT, nametag);
 							gui.open();
 							break;
@@ -193,13 +214,12 @@ public class AddreasonGUI implements Listener {
 							break;
 						}
 					}
-				} else if(inv.getName().equalsIgnoreCase("§6Zeiteinstellungen")) {
+				} else if(inv.getName().equalsIgnoreCase(timemenuname)) {
 					event.setCancelled(true);
 					ItemStack item = event.getCurrentItem();
 					AnvilGUI gui;
-					ItemStack nametag = ItemStackAPI.createItemStack(Material.NAME_TAG, 1, "Zahl hier eingeben");
-					switch(item.getItemMeta().getDisplayName()) {
-					case "§7Tage":
+					ItemStack nametag;
+					if(item.getItemMeta().getDisplayName().equalsIgnoreCase(daysname)) {
 						gui = new AnvilGUI(p, new AnvilClickEventHandler() {
 							
 							@Override
@@ -220,10 +240,10 @@ public class AddreasonGUI implements Listener {
 								event.setWillDestroy(false);
 							}
 						});
+						nametag = ItemStackAPI.createItemStack(Material.NAME_TAG, 1, daysname);
 						gui.setSlot(AnvilSlot.INPUT_LEFT, nametag);
 						gui.open();
-						break;
-					case "§7Stunden":
+					} else if(item.getItemMeta().getDisplayName().equalsIgnoreCase(hoursname)) {
 						gui = new AnvilGUI(p, new AnvilClickEventHandler() {
 							
 							@Override
@@ -244,10 +264,10 @@ public class AddreasonGUI implements Listener {
 								event.setWillDestroy(false);
 							}
 						});
+						nametag = ItemStackAPI.createItemStack(Material.NAME_TAG, 1, hoursname);
 						gui.setSlot(AnvilSlot.INPUT_LEFT, nametag);
 						gui.open();
-						break;
-					case "§7Minuten":
+					} else if(item.getItemMeta().getDisplayName().equalsIgnoreCase(minutesname)) {
 						gui = new AnvilGUI(p, new AnvilClickEventHandler() {
 							
 							@Override
@@ -268,10 +288,10 @@ public class AddreasonGUI implements Listener {
 								event.setWillDestroy(false);
 							}
 						});
+						nametag = ItemStackAPI.createItemStack(Material.NAME_TAG, 1, minutesname);
 						gui.setSlot(AnvilSlot.INPUT_LEFT, nametag);
 						gui.open();
-						break;
-					case "§cZurück zur Allgemeinauswahl":
+					} else if(item.getItemMeta().getDisplayName().equalsIgnoreCase(backname)) {
 						int d = daysCache.containsKey(p) ? daysCache.get(p) : 0;
 						int h = hoursCache.containsKey(p) ? hoursCache.get(p) : 0;
 						int m = minutesCache.containsKey(p) ? minutesCache.get(p) : 0;
@@ -287,8 +307,7 @@ public class AddreasonGUI implements Listener {
 							minutesCache.remove(p);
 							slotCache.remove(p);
 						} else p.playSound(p.getLocation(), Sound.NOTE_BASS, 1F, 1F);
-						break;
-					case "§cPermanent":
+					} else if(item.getItemMeta().getDisplayName().equalsIgnoreCase(permaname)) {
 						if(getCache(slotCache.get(p)).containsKey(p)) getCache(slotCache.get(p)).replace(p, -1L);
 						else getCache(slotCache.get(p)).put(p, -1L);
 						p.openInventory(getMenuGUI(p, nameCache.get(p), displayCache.get(p)));
@@ -297,7 +316,6 @@ public class AddreasonGUI implements Listener {
 						hoursCache.remove(p);
 						minutesCache.remove(p);
 						slotCache.remove(p);
-						break;
 					}
 				}
 			} catch(NullPointerException e ) {e.printStackTrace();}
@@ -321,21 +339,21 @@ public class AddreasonGUI implements Listener {
 	}
 	
 	private static Inventory getMenuGUI(Player player, String name, String display) {
-		Inventory inv = Bukkit.createInventory(null, 9*5, "§4Reason §c " + name + " §ahinzufügen");
+		Inventory inv = Bukkit.createInventory(null, 9*5, reasonInv.replace("[name]", name));
 		ItemStack n = ItemStackAPI.getItemStack(160, (short) 7, 1, "§5");
 		for(int i = 0; i < inv.getSize(); i++)inv.setItem(i, n);
 		
-		ItemStack time1 = ItemStackAPI.getItemStack(35, (short) 5, 1, "§aStufe 1");
-		ItemStack time2 = ItemStackAPI.getItemStack(35, (short) 1, 1, "§6Stufe 2");
-		ItemStack time3 = ItemStackAPI.getItemStack(35, (short) 14, 1, "§4Stufe 3");
+		ItemStack time1 = ItemStackAPI.getItemStack(35, (short) 5, 1, time1name);
+		ItemStack time2 = ItemStackAPI.getItemStack(35, (short) 1, 1, time2name);
+		ItemStack time3 = ItemStackAPI.getItemStack(35, (short) 14, 1, time3name);
 		
-		ItemStack mute = ItemStackAPI.createItemStack(Material.EMPTY_MAP, 1, "§cEine Mute-Reason");
-		ItemStack ban = ItemStackAPI.createItemStack(Material.BARRIER, 1, "§cEine Ban-Reason");
+		ItemStack mute = ItemStackAPI.createItemStack(Material.EMPTY_MAP, 1, mutename);
+		ItemStack ban = ItemStackAPI.createItemStack(Material.BARRIER, 1, banname);
 		ItemStack confirm = ItemStackAPI.createItemStack(player.getItemInHand().getType() != Material.AIR ?
 				player.getInventory().getItemInHand().getType() : Material.BARRIER, 1, display);
 		
-		ItemStack line12 = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7Stage 2 wird aktiviert ab:");
-		ItemStack line23 = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7Stage 3 wird aktiviert ab:");
+		ItemStack line12 = ItemStackAPI.createItemStack(Material.PAPER, 1, line12name);
+		ItemStack line23 = ItemStackAPI.createItemStack(Material.PAPER, 1, line23name);
 		
 		ItemStackAPI.setLore(time1, String.valueOf(time1Cache.get(player)));
 		ItemStackAPI.setLore(time2, String.valueOf(time2Cache.get(player)));
@@ -362,13 +380,13 @@ public class AddreasonGUI implements Listener {
 	
 	private static Inventory getTimeSettingGUI(Player player, HashMap<Player, Long> cache) {
 		int[] time = DateConverter.getDateTime(cache.get(player));
-		Inventory timemenu = Bukkit.createInventory(null, 9*2, "§6Zeiteinstellungen");
+		Inventory timemenu = Bukkit.createInventory(null, 9*2, timemenuname);
 		ItemStack n = ItemStackAPI.getItemStack(160, (short) 7, 1, "§5");
-		ItemStack days = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7Tage");
-		ItemStack hours = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7Stunden");
-		ItemStack minutes = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7Minuten");
-		ItemStack perma = ItemStackAPI.createItemStack(Material.BARRIER, 1, "§cPermanent");
-		ItemStack back = ItemStackAPI.createItemStack(Material.BOOK, 1, "§cZurück zur Allgemeinauswahl");
+		ItemStack days = ItemStackAPI.createItemStack(Material.PAPER, 1, daysname);
+		ItemStack hours = ItemStackAPI.createItemStack(Material.PAPER, 1, hoursname);
+		ItemStack minutes = ItemStackAPI.createItemStack(Material.PAPER, 1, minutesname);
+		ItemStack perma = ItemStackAPI.createItemStack(Material.BARRIER, 1, permaname);
+		ItemStack back = ItemStackAPI.createItemStack(Material.BOOK, 1, backname);
 		
 		ItemStackAPI.setLore(days, daysCache.containsKey(player) ? String.valueOf(daysCache.get(player)) : String.valueOf(time[0]));
 		ItemStackAPI.setLore(hours, hoursCache.containsKey(player) ? String.valueOf(hoursCache.get(player)) : String.valueOf(time[1]));

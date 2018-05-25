@@ -45,3 +45,40 @@ error:
   falseCommand: "&7Meintest du vielleicht&6 [command]&7?"
   # Fehler beim Verbinden zur MySQL
   sqlFailed: "&cEs konnte keine Verbindung zur MySQL-Datenbank aufgebaut werden. Bitte überprüfen sie ihre Einstellungen. Dieses Plugin wird nun deaktiviert."
+  
+gui:
+  reason:
+    inventory: "&4Reason&c [name] &ahinzufügen"
+    time1: "&aStufe 1"
+    time2: "&6Stufe 2"
+    time3: "&4Stufe 3"
+    mute: "&cEine Mute-Reason"
+    ban: "&cEine Ban-Reason"
+    line12: "&7Stage 2 wird aktiviert ab:"
+    line23: "&7Stage 3 wird aktiviert ab:"
+    timemenu: "&6Zeiteinstellungen"
+    days: "&7Tage"
+    hours: "&7Stunden"
+    minutes: "&7Minuten"
+    perma: "&cPermanent"
+    back: "&cZurück zur Allgemeinauswahl"
+    pointsraise: "Erhöhung_Punkte"
+  ban:
+    inventory: "&7[name] &cbannen?"
+    custom: "&cCustom-Ban"
+    mute: "&7Zum &6Mute"
+    days: " &aTage"
+    hours: " &aStunden"
+    minutes: " &aMinuten"
+    confirm: "&cBan &abestätigen"
+    perma: "&cPermanent"
+  mute:
+    inventory: "&7[name] &cmuten?"
+    custom: "&cCustom-Mute"
+    ban: "&7Zum &6Ban"
+    days: " &aTage"
+    hours: " &aStunden"
+    minutes: " &aMinuten"
+    confirm: "&cMute &abestätigen"
+    perma: "&cPermanent"
+    

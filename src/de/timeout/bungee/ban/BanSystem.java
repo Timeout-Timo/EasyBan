@@ -43,7 +43,7 @@ public class BanSystem extends Plugin implements Listener {
 
 	@Override
 	public void onDisable() {
-		MySQL.disconnect();
+		if(MySQL.isConnected())MySQL.disconnect();
 	}
 	
 	private void registerListener() {

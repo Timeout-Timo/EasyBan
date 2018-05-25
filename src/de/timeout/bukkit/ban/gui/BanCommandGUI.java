@@ -27,13 +27,22 @@ import de.timeout.utils.BukkitSQLManager;
 
 public class BanCommandGUI implements Listener {
 
-	private BanGUI main = BanGUI.plugin;
+	private static BanGUI main = BanGUI.plugin;
+	
+	private static String inventoryname = main.getLanguage("gui.ban.inventory");
+	private static String custmname = main.getLanguage("gui.ban.inventory");
+	private static String mutename = main.getLanguage("gui.ban.mute");
+	private static String daysname = main.getLanguage("gui.ban.days");
+	private static String hoursname = main.getLanguage("gui.ban.hours");
+	private static String minutesname = main.getLanguage("gui.ban.minutes");
+	private static String confirmname = main.getLanguage("gui.ban.confirm");
+	private static String permaname = main.getLanguage("gui.ban.perma");
 	
 	private static HashMap<Player, String> openInvs = new HashMap<Player, String>();
 	
 	public static void openBanMenu(Player p, String name) {
 		List<BukkitReason> reasons = BukkitSQLManager.getBanReasons();
-		Inventory inv = Bukkit.createInventory(null, reasons.size()/9+27, "§7" + name + " §cbannen?");
+		Inventory inv = Bukkit.createInventory(null, reasons.size()/9+27, inventoryname.replace("[name]", name));
 		
 		for(int i = 0; i < reasons.size(); i++)inv.setItem(i, reasons.get(i).getTitle());
 		
@@ -41,8 +50,8 @@ public class BanCommandGUI implements Listener {
 		ItemStack n = ItemStackAPI.getItemStack(160, (short) 7, 1, "§5");
 		for(int i = linestart; i < linestart+9; i++) inv.setItem(i, n);
 		
-		ItemStack custom = ItemStackAPI.createItemStack(Material.BOOK_AND_QUILL, 1, "§cCustom-Ban");
-		ItemStack mute = ItemStackAPI.createItemStack(Material.SIGN, 1, "§7Zum §6Mute");
+		ItemStack custom = ItemStackAPI.createItemStack(Material.BOOK_AND_QUILL, 1, custmname);
+		ItemStack mute = ItemStackAPI.createItemStack(Material.SIGN, 1, mutename);
 		inv.setItem(linestart + 10, mute);
 		inv.setItem(linestart + 16, custom);
 		
@@ -56,7 +65,7 @@ public class BanCommandGUI implements Listener {
 			Player p = (Player) event.getWhoClicked();
 			try {
 				if(openInvs.containsKey(p)) {
-					if(event.getClickedInventory().getName().equalsIgnoreCase("§cCustom-Ban")) {
+					if(event.getClickedInventory().getName().equalsIgnoreCase(custmname)) {
 						Inventory inv = event.getClickedInventory();
 						event.setCancelled(true);
 						ItemStack item = event.getCurrentItem();
@@ -79,9 +88,9 @@ public class BanCommandGUI implements Listener {
 									ItemStack confirm = inv.getItem(34);
 									ItemMeta confirmMeta = confirm.getItemMeta();
 									List<String> lore = new ArrayList<String>();
-									lore.add(inv.getItem(19).getItemMeta().getLore().get(0) + " §aTage");
-									lore.add(inv.getItem(21).getItemMeta().getLore().get(0) + " §aStunden");
-									lore.add(inv.getItem(23).getItemMeta().getLore().get(0) + " §aMinuten");
+									lore.add(inv.getItem(19).getItemMeta().getLore().get(0) + daysname);
+									lore.add(inv.getItem(21).getItemMeta().getLore().get(0) + hoursname);
+									lore.add(inv.getItem(23).getItemMeta().getLore().get(0) + minutesname);
 									confirmMeta.setLore(lore);
 									confirm.setItemMeta(confirmMeta);
 									inv.setItem(34, confirm);
@@ -108,9 +117,9 @@ public class BanCommandGUI implements Listener {
 									ItemStack confirm = inv.getItem(34);
 									ItemMeta confirmMeta = confirm.getItemMeta();
 									List<String> lore = new ArrayList<String>();
-									lore.add(inv.getItem(19).getItemMeta().getLore().get(0) + " §aTage");
-									lore.add(inv.getItem(21).getItemMeta().getLore().get(0) + " §aStunden");
-									lore.add(inv.getItem(23).getItemMeta().getLore().get(0) + " §aMinuten");
+									lore.add(inv.getItem(19).getItemMeta().getLore().get(0) + daysname);
+									lore.add(inv.getItem(21).getItemMeta().getLore().get(0) + hoursname);
+									lore.add(inv.getItem(23).getItemMeta().getLore().get(0) + minutesname);
 									confirmMeta.setLore(lore);
 									confirm.setItemMeta(confirmMeta);
 									inv.setItem(34, confirm);
@@ -118,7 +127,7 @@ public class BanCommandGUI implements Listener {
 									p.updateInventory();
 								}
 							} catch(NumberFormatException e) {}
-						} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cBan §abestätigen")) {
+						} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(confirmname)) {
 							if(Integer.valueOf(inv.getItem(19).getItemMeta().getLore().get(0).substring(2)) + 
 									Integer.valueOf(inv.getItem(21).getItemMeta().getLore().get(0).substring(2)) + 
 									Integer.valueOf(inv.getItem(23).getItemMeta().getLore().get(0).substring(2)) > 0) {
@@ -138,8 +147,8 @@ public class BanCommandGUI implements Listener {
 								p.closeInventory();
 								openInvs.remove(p);
 							} else p.playSound(p.getLocation(), Sound.NOTE_BASS, 1F, 1F);
-						} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cPermanent")) {
-							if(p.hasPermission("griefking.permaban")) {
+						} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(permaname)) {
+							if(p.hasPermission("easyban.permaban")) {
 								ByteArrayDataOutput out = ByteStreams.newDataOutput();
 								out.writeUTF("PermaBan");
 								out.writeUTF(openInvs.get(p));
@@ -153,21 +162,21 @@ public class BanCommandGUI implements Listener {
 					} else {
 						event.setCancelled(true);
 						String name = openInvs.get(p);
-						if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§cCustom-Ban")) {
-							if(p.hasPermission("griefking.customban")) {
-								Inventory inv = Bukkit.createInventory(null, 9*5, "§cCustom-Ban");
+						if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(custmname)) {
+							if(p.hasPermission("easyban.customban")) {
+								Inventory inv = Bukkit.createInventory(null, 9*5, custmname);
 								ItemStack n = ItemStackAPI.getItemStack(160, (short) 7, 1, "§5");
 								for(int i = 0; i < inv.getSize(); i++)inv.setItem(i, n);
 								
 								ItemStack plus = ItemStackAPI.getItemStack(160, (short) 5, 1, "§a+");
 								ItemStack minus = ItemStackAPI.getItemStack(160, (short) 14, 1, "§c-");
 								
-								ItemStack minutes = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7Minuten");
-								ItemStack hours = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7Stunden");
-								ItemStack days = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7Tage");
+								ItemStack minutes = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7" + minutesname.substring(3));
+								ItemStack hours = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7" + hoursname.substring(3));
+								ItemStack days = ItemStackAPI.createItemStack(Material.PAPER, 1, "§7" + daysname.substring(3));
 								
-								ItemStack perma = ItemStackAPI.createItemStack(Material.NETHER_STAR, 1, "§cPermanent");
-								ItemStack confirm = ItemStackAPI.createItemStack(Material.BOOK, 1, "§cBan §abestätigen");
+								ItemStack perma = ItemStackAPI.createItemStack(Material.NETHER_STAR, 1, permaname);
+								ItemStack confirm = ItemStackAPI.createItemStack(Material.BOOK, 1, confirmname);
 								ItemStackAPI.enchantItem(confirm, Enchantment.DURABILITY, 1, true);
 								
 								//substring 2 für aktuelle Zahl
@@ -176,9 +185,9 @@ public class BanCommandGUI implements Listener {
 								ItemStackAPI.setLore(days, "§50");
 								
 								List<String> confirmlore = new ArrayList<String>();
-								confirmlore.add("§50 §aTage");
-								confirmlore.add("§50 §aStunden");
-								confirmlore.add("§51 §aMinuten");
+								confirmlore.add("§50" + daysname);
+								confirmlore.add("§50" + hoursname);
+								confirmlore.add("§51" + minutesname);
 								ItemStackAPI.setLore(confirm, confirmlore);
 								
 								inv.setItem(10, plus);
@@ -197,7 +206,7 @@ public class BanCommandGUI implements Listener {
 								
 								p.openInventory(inv);
 							} else p.playSound(p.getLocation(), Sound.NOTE_BASS, 1F, 1F);
-						} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§7Zum §6Mute")) {
+						} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(mutename)) {
 							MuteCommandGUI.openMuteMenu(p, openInvs.get(p));
 							openInvs.remove(p);
 						} else {
