@@ -42,7 +42,7 @@ public class MuteCommandGUI implements Listener {
 	
 	public static void openMuteMenu(Player p, String name) {
 		List<BukkitReason> reasons = BukkitSQLManager.getMuteReasons();
-		Inventory inv = Bukkit.createInventory(null, reasons.size()/9+27, "§7" + name + " §cmuten?");
+		Inventory inv = Bukkit.createInventory(null, reasons.size()/9+27, inventoryname.replace("[name]", name));
 		
 		for(int i = 0; i < reasons.size(); i++)inv.setItem(i, reasons.get(i).getTitle());
 		
