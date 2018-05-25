@@ -1,6 +1,6 @@
 name: EasyBan-GUI
 author: Timeout
-version: 0.1-DEV
+version: 0.1
 description: Eine GUI für das Bansystem
 
 main: de.timeout.bukkit.ban.BanGUI
@@ -24,6 +24,10 @@ permissions:
     description: Die GUI-Ban Permission
   easyban.permaban:
     description: Die GUI-PermaBan Permission
+  easyban.ignoreban:
+    description: Die Ban-Ignore Permission
+  easyban.ignoremute:
+    description: Die Mute-Ignore Permission
   easyban.customban:
     description: Die GUI-CustomBan Permission
   easyban.mute:

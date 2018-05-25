@@ -19,7 +19,7 @@ public class AddreasonCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender instanceof Player) {
 			Player p = (Player)sender;
-			if(p.hasPermission("griefking.addreason")) {
+			if(p.hasPermission("easyban.addreason")) {
 				if(args.length == 2) {
 					String name = args[0].toLowerCase();
 					String display = args[1];

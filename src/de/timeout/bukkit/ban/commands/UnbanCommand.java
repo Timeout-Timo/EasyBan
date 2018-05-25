@@ -30,7 +30,7 @@ public class UnbanCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(sender.hasPermission("griefking.unban")) {
+		if(sender.hasPermission("easyban.unban")) {
 			if(args.length == 1) {
 				String name = args[0];
 				if(BukkitSQLManager.isBanned(name)) {

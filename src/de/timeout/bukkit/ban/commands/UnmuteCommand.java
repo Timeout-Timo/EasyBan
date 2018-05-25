@@ -31,7 +31,7 @@ public class UnmuteCommand implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(sender.hasPermission("griefking.unmute")) {
+		if(sender.hasPermission("easyban.unmute")) {
 			if(args.length == 1) {
 				String name = args[0];
 				if(BukkitSQLManager.isMuted(name)) {
