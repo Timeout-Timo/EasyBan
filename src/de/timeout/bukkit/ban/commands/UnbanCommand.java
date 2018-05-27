@@ -1,15 +1,11 @@
 package de.timeout.bukkit.ban.commands;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import com.google.gson.JsonParser;
 
 import de.timeout.bukkit.ban.BanGUI;
 import de.timeout.utils.BukkitSQLManager;
@@ -28,6 +24,7 @@ public class UnbanCommand implements CommandExecutor {
 	// [command] required CommandName
 	private String falsecmd = main.getLanguage("error.falseCommand");
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(sender.hasPermission("easyban.unban")) {
@@ -35,7 +32,7 @@ public class UnbanCommand implements CommandExecutor {
 				String name = args[0];
 				if(BukkitSQLManager.isBanned(name)) {
 					Reason reason = new Reason(BukkitSQLManager.getBanReasonName(name), ReasonType.BAN);
-					UUID uuid = getUUIDFromMojangServer(name);
+					UUID uuid = Bukkit.getServer().getOfflinePlayer(name).getUniqueId();
 					BukkitSQLManager.updateHistory(uuid, -reason.getViolencePoints());
 					BukkitSQLManager.unban(uuid);
 					sender.sendMessage(prefix + unban.replace("[name]", name));
@@ -45,32 +42,32 @@ public class UnbanCommand implements CommandExecutor {
 		return false;
 	}
 
-	private UUID getUUIDFromMojangServer(String name) {
-		String url = "https://api.mojang.com/users/profiles/minecraft/" + name.toLowerCase();
-		
-		try {
-			InputStreamReader reader = new InputStreamReader(new URL(url).openStream());
-			String trimmedUUID = new JsonParser().parse(reader).getAsJsonObject().get("id").getAsString();
-			
-			return fromTrimmed(trimmedUUID);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	private UUID fromTrimmed(String trimmedUUID) throws IllegalArgumentException {
-	    if(trimmedUUID == null) throw new IllegalArgumentException();
-	    StringBuilder builder = new StringBuilder(trimmedUUID.trim());
-	    try {
-	        builder.insert(20, "-");
-	        builder.insert(16, "-");
-	        builder.insert(12, "-");
-	        builder.insert(8, "-");
-	    } catch (StringIndexOutOfBoundsException e){
-	        throw new IllegalArgumentException();
-	    }
-	 
-	    return UUID.fromString(builder.toString());
-	}
+//	private UUID getUUIDFromMojangServer(String name) {
+//		String url = "https://api.mojang.com/users/profiles/minecraft/" + name.toLowerCase();
+//		
+//		try {
+//			InputStreamReader reader = new InputStreamReader(new URL(url).openStream());
+//			String trimmedUUID = new JsonParser().parse(reader).getAsJsonObject().get("id").getAsString();
+//			
+//			return fromTrimmed(trimmedUUID);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
+//	
+//	private UUID fromTrimmed(String trimmedUUID) throws IllegalArgumentException {
+//	    if(trimmedUUID == null) throw new IllegalArgumentException();
+//	    StringBuilder builder = new StringBuilder(trimmedUUID.trim());
+//	    try {
+//	        builder.insert(20, "-");
+//	        builder.insert(16, "-");
+//	        builder.insert(12, "-");
+//	        builder.insert(8, "-");
+//	    } catch (StringIndexOutOfBoundsException e){
+//	        throw new IllegalArgumentException();
+//	    }
+//	 
+//	    return UUID.fromString(builder.toString());
+//	}
 }

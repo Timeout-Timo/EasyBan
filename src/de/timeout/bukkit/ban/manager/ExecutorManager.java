@@ -8,7 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import de.timeout.bukkit.ban.ConfigManager;
 import de.timeout.utils.BukkitSQLManager;
@@ -17,10 +18,10 @@ import de.timeout.utils.DateConverter;
 public class ExecutorManager implements Listener {
 	
 	@EventHandler
-	public void onBanExecute(PlayerJoinEvent event) {
+	public void onBanExecute(PlayerLoginEvent event) {
 		Player p = event.getPlayer();
 		UUID uuid = p.getUniqueId();
-		String ip = p.getAddress().getAddress().getHostAddress();
+		String ip = event.getAddress().getHostAddress();
 		if(BukkitSQLManager.isBanned(ip, uuid)) {
 			long ipban = BukkitSQLManager.getBanTime(ip);
 			long uuidban = BukkitSQLManager.getBanTime(uuid);
@@ -34,14 +35,14 @@ public class ExecutorManager implements Listener {
 				String banner = BukkitSQLManager.getBanner(uuid);
 				List<String> list = ConfigManager.getLanguageConfig().getStringList("ban.screen");
 				
-				p.kickPlayer(getString(list, reason, uuidban, banner));
+				event.disallow(Result.KICK_BANNED, getString(list, reason, uuidban, banner));
 				BukkitSQLManager.updateIPAddress(ip, p.getName(), uuid);
 			} else {
 				String reason = BukkitSQLManager.getBanReason(ip);
 				String banner = BukkitSQLManager.getBanner(ip);
 				List<String> list = ConfigManager.getLanguageConfig().getStringList("ban.screen");
 				
-				p.kickPlayer(getString(list, reason, ipban, banner));
+				event.disallow(Result.KICK_BANNED, getString(list, reason, uuidban, banner));
 			}
 		}
 	}

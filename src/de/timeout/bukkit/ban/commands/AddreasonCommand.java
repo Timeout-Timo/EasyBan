@@ -14,6 +14,7 @@ public class AddreasonCommand implements CommandExecutor {
 	
 	private String prefix = main.getLanguage("prefix");
 	private String permission = main.getLanguage("error.permissions");
+	private String falseCommand = main.getLanguage("error.falseCommand");
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -24,7 +25,7 @@ public class AddreasonCommand implements CommandExecutor {
 					String name = args[0].toLowerCase();
 					String display = args[1];
 					AddreasonGUI.addReasonGUI(p, name, display.replaceAll("&", "§"));
-				}
+				} else p.sendMessage(prefix + falseCommand.replace("[command]", "/addreason <pathname> <Display>"));
 			} else p.sendMessage(prefix + permission);
 		}
 		return false;

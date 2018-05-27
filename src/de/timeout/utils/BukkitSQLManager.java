@@ -79,7 +79,7 @@ public class BukkitSQLManager {
 	
 	public static boolean isBanned(String name) {
 		try {
-			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT NAME FROM Bans WHERE Name = ?");
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Name FROM Bans WHERE Name = ?");
 			ps.setString(1, name);
 			ResultSet rs = ps.executeQuery();
 			return rs.next();
@@ -452,8 +452,8 @@ public class BukkitSQLManager {
 				ps.setString(1, uuid.toString());
 				ps.setString(2, ip);
 				ps.setString(3, name);
-				ps.setLong(4, bantime > 0 ? System.currentTimeMillis() + bantime : bantime);
-				ps.setString(5, reason);
+				ps.setString(4, reason);
+				ps.setLong(5, bantime > 0 ? System.currentTimeMillis() + bantime : bantime);
 				ps.setString(6, banner);
 				ps.execute();
 			} catch (SQLException e) {
@@ -501,8 +501,8 @@ public class BukkitSQLManager {
 				ps.setString(1, uuid.toString());
 				ps.setString(2, ip);
 				ps.setString(3, name);
-				ps.setLong(4, mutetime > 0 ? System.currentTimeMillis() + mutetime : mutetime);
-				ps.setString(5, reason);
+				ps.setString(4, reason);
+				ps.setLong(5, mutetime > 0 ? System.currentTimeMillis() + mutetime : mutetime);
 				ps.setString(6, muter);
 				ps.execute();
 			} catch (SQLException e) {

@@ -29,7 +29,7 @@ public class BanCommandGUI implements Listener {
 	private static BanGUI main = BanGUI.plugin;
 	
 	private static String inventoryname = main.getLanguage("gui.ban.inventory");
-	private static String custmname = main.getLanguage("gui.ban.inventory");
+	private static String custmname = main.getLanguage("gui.ban.custom");
 	private static String mutename = main.getLanguage("gui.ban.mute");
 	private static String daysname = main.getLanguage("gui.ban.days");
 	private static String hoursname = main.getLanguage("gui.ban.hours");

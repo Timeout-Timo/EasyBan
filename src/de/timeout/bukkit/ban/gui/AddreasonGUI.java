@@ -318,7 +318,7 @@ public class AddreasonGUI implements Listener {
 						slotCache.remove(p);
 					}
 				}
-			} catch(NullPointerException e ) {e.printStackTrace();}
+			} catch(NullPointerException e ) {}
 		}
 	}
 	

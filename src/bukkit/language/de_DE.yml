@@ -18,7 +18,7 @@ ban:
   # Target hat Ignore-Permission
   ignore: "&cDu kannst diesen Spieler nicht bannen."
   # Selbstbanversuch
-  self: "&cDu kannst dich nicht selbst muten."
+  self: "&cDu kannst dich nicht selbst bannen."
   
   #----------------------- Non-Bungeesupport -------------------------#
   # Customban-Reason
@@ -31,7 +31,7 @@ ban:
   - "&cZeit bin zum Ablauf:&e [date]"
   - "&cGrund:&e [reason]"
   - "&cGebannt von:&e [muter]"
-  - "&cDu kannst einen Entmutungsantrag auf dem TS stellen."
+  - "&cDu kannst einen Entbannungsantrag auf dem TS stellen."
   
 mute:
   # Unmute-Message

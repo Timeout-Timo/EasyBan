@@ -23,9 +23,7 @@ public class MySQL {
 		MySQL.password = password;
 		try {
 			con = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?autoReconnect=true", username, password);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {}
 	}
 
 	public static void disconnect() {

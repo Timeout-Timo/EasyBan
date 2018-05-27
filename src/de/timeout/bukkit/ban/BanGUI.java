@@ -15,6 +15,7 @@ import de.timeout.bukkit.ban.commands.UnmuteCommand;
 import de.timeout.bukkit.ban.gui.AddreasonGUI;
 import de.timeout.bukkit.ban.gui.BanCommandGUI;
 import de.timeout.bukkit.ban.gui.MuteCommandGUI;
+import de.timeout.bukkit.ban.manager.ExecutorManager;
 import de.timeout.bukkit.ban.utils.UTFConfig;
 import de.timeout.utils.MySQL;
 
@@ -65,6 +66,7 @@ public class BanGUI extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new BanCommandGUI(), this);
 		Bukkit.getPluginManager().registerEvents(new MuteCommandGUI(), this);
 		Bukkit.getPluginManager().registerEvents(new AddreasonGUI(), this);
+		if(!bungeecord)Bukkit.getPluginManager().registerEvents(new ExecutorManager(), this);
 	}
 	
 	private void registerCommands() {

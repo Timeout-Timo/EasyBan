@@ -20,7 +20,7 @@ public class DelreasonCommand implements CommandExecutor {
 	private String notExists = main.getLanguage("delreason.notExists");
 	
 	private String permissions = main.getLanguage("error.permissions");
-	private String falseCMD = main.getLanguage("error.falseCommmand");
+	private String falseCMD = main.getLanguage("error.falseCommand");
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -40,5 +40,4 @@ public class DelreasonCommand implements CommandExecutor {
 		} else sender.sendMessage(prefix + permissions);
 		return false;
 	}
-
 }
