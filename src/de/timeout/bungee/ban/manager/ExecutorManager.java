@@ -6,7 +6,6 @@ import java.util.UUID;
 import de.timeout.bungee.ban.ConfigManager;
 import de.timeout.utils.BungeeSQLManager;
 import de.timeout.utils.DateConverter;
-import de.timeout.utils.Reason;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -27,23 +26,22 @@ public class ExecutorManager implements Listener {
 			long uuidban = BungeeSQLManager.getBanTime(uuid);
 			long millis = System.currentTimeMillis();
 			
-			if((millis >= ipban || millis >= uuidban) && uuidban > -1 && ipban > -1) {
+			if((millis >= ipban && millis >= uuidban) && uuidban > -1 && ipban > -1) {
 				BungeeSQLManager.unbanPlayer(ip);
 				BungeeSQLManager.unbanPlayer(uuid);
 			} else if(millis < uuidban) {
-				Reason reason = BungeeSQLManager.getBanReason(uuid);
+				String reason = BungeeSQLManager.getBanReason(uuid);
 				String banner = BungeeSQLManager.getBanner(uuid);
-				long bantime = BungeeSQLManager.getBanTime(uuid);
 				List<String> list = ConfigManager.getLanguage().getStringList("ban.screen");
 				
-				p.disconnect(new TextComponent(getString(list, reason.getDisplayName(), bantime, banner)));
+				p.disconnect(new TextComponent(getString(list, reason, uuidban, banner)));
+				BungeeSQLManager.updateIPAddress(ip, p.getName(), uuid);
 			} else {
-				Reason reason = BungeeSQLManager.getBanReason(ip);
+				String reason = BungeeSQLManager.getBanReason(ip);
 				String banner = BungeeSQLManager.getBanner(ip);
-				long bantime = BungeeSQLManager.getBanTime(ip);
 				List<String> list = ConfigManager.getLanguage().getStringList("ban.screen");
 				
-				p.disconnect(new TextComponent(getString(list, reason.getDisplayName(), bantime, banner)));
+				p.disconnect(new TextComponent(getString(list, reason, ipban, banner)));
 			}
 		}
 	}
@@ -59,17 +57,16 @@ public class ExecutorManager implements Listener {
 					long uuidmute = BungeeSQLManager.getMuteTime(p.getAddress().getAddress().getHostAddress());
 					long millis = System.currentTimeMillis();
 					
-					if((millis >= ipmute || millis >= uuidmute) && ipmute > -1 && uuidmute > -1) {
+					if((millis >= ipmute && millis >= uuidmute) && ipmute > -1 && uuidmute > -1) {
 						BungeeSQLManager.unmutePlayer(p.getUniqueId());
 						BungeeSQLManager.unmutePlayer(p.getAddress().getAddress().getHostAddress());
 					} else {
 						event.setCancelled(true);
 						List<String> list = ConfigManager.getLanguage().getStringList("mute.screen");
 						String reason = BungeeSQLManager.getMuteReason(p);
-						long mutetime = BungeeSQLManager.getMuteTime(p);
 						String muter = BungeeSQLManager.getMuter(p);
 						
-						p.sendMessage(new TextComponent(getString(list, reason, mutetime, muter)));
+						p.sendMessage(new TextComponent(getString(list, reason, uuidmute > ipmute ? uuidmute : ipmute, muter)));
 					}
 				}
 			}
@@ -83,6 +80,7 @@ public class ExecutorManager implements Listener {
 		s = s.replace("[reason]", display);
 		s = s.replace("[date]", DateConverter.getDate(bantime));
 		s = s.replace("[banner]", banner);
+		s = s.replace("[muter]", banner);
 		return s;
 	}
 }

@@ -520,7 +520,7 @@ public class BungeeSQLManager {
 		}
 	}
 	
-	public static Reason getBanReason(UUID uuid) {
+	public static String getBanReason(UUID uuid) {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Reason FROM Bans WHERE UUID = ?");
 			ps.setString(1, uuid.toString());
@@ -529,14 +529,14 @@ public class BungeeSQLManager {
 			while(rs.next()) {
 				s = rs.getString("Reason");
 			}
-			return s != null ? new Reason(s, ReasonType.BAN) : null;
+			return s;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
-	public static Reason getBanReason(String ip) {
+	public static String getBanReason(String ip) {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Reason FROM Bans WHERE IP = ?");
 			ps.setString(1, ip);
@@ -545,7 +545,7 @@ public class BungeeSQLManager {
 			while(rs.next()) {
 				s = rs.getString("Reason");
 			}
-			return s != null ? new Reason(s, ReasonType.BAN) : null;
+			return s;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -678,5 +678,17 @@ public class BungeeSQLManager {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	public static void updateIPAddress(String ip, String name, UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Bans SET IP = ?, Name = ? WHERE UUID = ?");
+			ps.setString(1, ip);
+			ps.setString(2, name);
+			ps.setString(3, uuid.toString());
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

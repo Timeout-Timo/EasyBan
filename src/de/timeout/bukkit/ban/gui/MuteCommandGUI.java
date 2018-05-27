@@ -17,13 +17,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-
 import de.timeout.bukkit.ban.BanGUI;
+import de.timeout.bukkit.ban.manager.WrapperManager;
 import de.timeout.bukkit.ban.utils.BukkitReason;
 import de.timeout.bukkit.ban.utils.ItemStackAPI;
 import de.timeout.utils.BukkitSQLManager;
+import de.timeout.utils.Reason.ReasonType;
 
 public class MuteCommandGUI implements Listener {
 
@@ -135,33 +134,19 @@ public class MuteCommandGUI implements Listener {
 								int hours = Integer.valueOf(inv.getItem(21).getItemMeta().getLore().get(0).substring(2));
 								int minutes = Integer.valueOf(inv.getItem(23).getItemMeta().getLore().get(0).substring(2));
 								
-								ByteArrayDataOutput out = ByteStreams.newDataOutput();
-								out.writeUTF("CustomMute");
-								out.writeUTF(openInvs.get(p));
-								out.writeLong(days);
-								out.writeLong(hours);
-								out.writeLong(minutes);
-								out.writeUTF(p.getDisplayName());
-								
-								p.sendPluginMessage(main, "BanSystem", out.toByteArray());
+								WrapperManager.manageCustomMute(openInvs.get(p), days, hours, minutes, p);
 								p.closeInventory();
 								openInvs.remove(p);
 							} else p.playSound(p.getLocation(), Sound.NOTE_BASS, 1F, 1F);
 						} else if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(permaname)) {
 							if(p.hasPermission("easyban.permamute")) {
-								ByteArrayDataOutput out = ByteStreams.newDataOutput();
-								out.writeUTF("PermaMute");
-								out.writeUTF(openInvs.get(p));
-								out.writeUTF(p.getDisplayName());
-								
-								p.sendPluginMessage(main, "BanSystem", out.toByteArray());
+
 								p.closeInventory();
 								openInvs.remove(p);
 							} else p.playSound(p.getLocation(), Sound.NOTE_BASS, 1F, 1F);
 						}
 					} else {
 						event.setCancelled(true);
-						String name = openInvs.get(p);
 						if(event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase(customname)) {
 							if(p.hasPermission("easyban.custommute")) {
 								Inventory inv = Bukkit.createInventory(null, 9*5, customname);
@@ -212,13 +197,8 @@ public class MuteCommandGUI implements Listener {
 						} else {
 							ItemStack reason = event.getCurrentItem();
 							
-							ByteArrayDataOutput out = ByteStreams.newDataOutput();
-							out.writeUTF("Mute");
-							out.writeUTF(name);
-							out.writeUTF(BukkitSQLManager.getNameByItemStack(reason, "Mute"));
-							out.writeUTF(p.getDisplayName());
-							
-							p.sendPluginMessage(main, "BanSystem", out.toByteArray());
+							BukkitReason r = new BukkitReason(BukkitSQLManager.getNameByItemStack(reason, ReasonType.MUTE.getName()), ReasonType.MUTE);
+							WrapperManager.manageMute(openInvs.get(p), r, p);
 							p.closeInventory();
 							openInvs.remove(p);
 						}

@@ -20,6 +20,18 @@ ban:
   # Ban yourself
   self: "&cYou cannot ban yourself."
   
+  #----------------------- Non-Bungeesupport -------------------------#
+  # Customban-Reason
+  custom: "&cThe Serverteam gave you a special mute."
+  # Permaban-Reason
+  perma: "&cThe Serverteam didn't want your incorrect behavior on the server!"
+  # Will be shown the banned player
+  screen:
+  - "&cYou are banned from this network."
+  - "&cYou will be unbanned at:&e [date]"
+  - "&cReason:&e [reason]"
+  - "&cBanned by:&e [muter]"
+  
 mute:
   # Unmute-Message
   unmute: "&7You have unmuted&a [name] &7successfully."
@@ -27,6 +39,18 @@ mute:
   ignore: "&cYou cannot mute this Player."
   # Mute yourself
   self: "&cYou cannot mute yourself."
+  
+  #----------------------- Non-Bungeesupport -------------------------#
+  # Custommute-Reason
+  custom: "&cThe team gave you a special mute."
+  # Permaban-Reason
+  perma: "&cThe team didn't want your incorrect behavior in the chat!"
+  # Will be shown the muted player
+  screen:
+  - "&cYou are muted on this network."
+  - "&cYou will be unmuted at:&e [date]"
+  - "&cReason:&e [reason]"
+  - "&cMuted by:&e [muter]"
   
 delreason:
   # Deleted successfully

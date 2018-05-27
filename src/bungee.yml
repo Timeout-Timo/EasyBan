@@ -1,6 +1,6 @@
 name: EasyBan
 author: Timeout
-version: 0.1
+version: 0.3
 description: A simple BanManager with GUI
 
 main: de.timeout.bungee.ban.BanSystem

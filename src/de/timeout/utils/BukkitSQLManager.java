@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.UUID;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -72,6 +73,10 @@ public class BukkitSQLManager {
 		return null;
 	}
 	
+	public static boolean isBanned(String ip, UUID uuid) {
+		return isBanned(uuid) || isIPBanned(ip);
+	}
+	
 	public static boolean isBanned(String name) {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT NAME FROM Bans WHERE Name = ?");
@@ -117,6 +122,20 @@ public class BukkitSQLManager {
 		return null;
 	}
 	
+	public static String getBanReasonName(UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Reason FROM Bans WHERE UUID = ?");
+			ps.setString(1, uuid.toString());
+			ResultSet rs = ps.executeQuery();
+			String s = "";
+			while(rs.next())s = rs.getString("Reason");
+			return s;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
 	public static String getMuteReasonName(String playerName) {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Reason FROM Mutes WHERE Name = ?");
@@ -155,10 +174,32 @@ public class BukkitSQLManager {
 		return false;
 	}
 	
+	public static boolean isIPMuted(String ip) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT IP FROM Mutes WHERE IP = ?");
+			ps.setString(1, ip);
+			ResultSet rs = ps.executeQuery();
+			return rs.next();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public static void unmute(UUID uuid) {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("DELETE FROM Mutes WHERE UUID = ?");
 			ps.setString(1, uuid.toString());
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void unmute(String ip) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("DELETE FROM Mutes WHERE IP = ?");
+			ps.setString(1, ip);
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -208,6 +249,16 @@ public class BukkitSQLManager {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("DELETE FROM Bans WHERE UUID = ?");
 			ps.setString(1, uuid.toString());
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void unban(String ip) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("DELETE FROM Bans WHERE IP = ?");
+			ps.setString(1, ip);
 			ps.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -300,5 +351,249 @@ public class BukkitSQLManager {
 			e.printStackTrace();
 		}
 		throw new NullPointerException("Unknown ReasonTypeName");
+	}
+	
+	public static long getBanTime(UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Unban FROM Bans WHERE UUID = ?");
+			ps.setString(1, uuid.toString());
+			ResultSet rs = ps.executeQuery();
+			long l = 0L;
+			while(rs.next())l = rs.getLong("Unban");
+			return l;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public static long getBanTime(String ip) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Unban FROM Bans WHERE IP = ?");
+			ps.setString(1, ip);
+			ResultSet rs = ps.executeQuery();
+			long l = 0L;
+			while(rs.next())l = rs.getLong("Unban");
+			return l;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public static long getMuteTime(UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Unmute FROM Mutes WHERE UUID = ?");
+			ps.setString(1, uuid.toString());
+			ResultSet rs = ps.executeQuery();
+			long l = 0L;
+			while(rs.next())l = rs.getLong("Unban");
+			return l;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public static long getMuteTime(String ip) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Unmute FROM Mutes WHERE IP = ?");
+			ps.setString(1, ip);
+			ResultSet rs = ps.executeQuery();
+			long l = 0L;
+			while(rs.next())l = rs.getLong("Unban");
+			return l;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public static void addBan(Player banned, long bantime, String banner, String reason) {
+		addBan(banned.getUniqueId(), banned.getAddress().getAddress().getHostAddress(), banned.getName(), bantime, banner, reason);
+	}
+	
+	public static void addBan(UUID uuid, String ip, String name, long bantime, String banner, String reason) {
+		if(isBanned(uuid)) {
+			long oldtime = getBanTime(uuid);
+			if(oldtime > 0) {
+				try {
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Bans SET Unban = ?, IP = ?, Banner = ?, Reason = ?, Name = ? WHERE UUID = ?");
+					ps.setLong(1, bantime > 0 ? bantime + oldtime : bantime);
+					ps.setString(2, ip);
+					ps.setString(3, banner);
+					ps.setString(4, reason);
+					ps.setString(5, name);
+					ps.setString(6, uuid.toString());
+					ps.execute();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} else if(isBanned(ip)) {
+			long oldtime = getBanTime(ip);
+			if(oldtime > 0) {
+				try {
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Bans SET Unban = ?, UUID = ?, Banner = ?, Reason = ?, Name = ? WHERE IP = ?");
+					ps.setLong(1, bantime > 0 ? bantime + oldtime : bantime);
+					ps.setString(2, uuid.toString());
+					ps.setString(3, banner);
+					ps.setString(4, reason);
+					ps.setString(5, name);
+					ps.setString(6, ip);
+					ps.execute();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			try {
+				PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO Bans VALUES (?, ?, ?, ?, ?, ?)");
+				ps.setString(1, uuid.toString());
+				ps.setString(2, ip);
+				ps.setString(3, name);
+				ps.setLong(4, bantime > 0 ? System.currentTimeMillis() + bantime : bantime);
+				ps.setString(5, reason);
+				ps.setString(6, banner);
+				ps.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void addMute(UUID uuid, String ip, String name, long mutetime, String muter, String reason) {
+		if(isMuted(uuid)) {
+			long oldtime = getMuteTime(uuid);
+			if(oldtime > 0) {
+				try {
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Mutes SET Unmute = ?, IP = ?, Muter = ?, Reason = ?, Name = ? WHERE UUID = ?");
+					ps.setLong(1, mutetime > 0 ? mutetime + oldtime : mutetime);
+					ps.setString(2, ip);
+					ps.setString(3, muter);
+					ps.setString(4, reason);
+					ps.setString(5, name);
+					ps.setString(6, uuid.toString());
+					ps.execute();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} else if(isMuted(ip)) {
+			long oldtime = getMuteTime(ip);
+			if(oldtime > 0) {
+				try {
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Mutes SET Unmute = ?, UUID = ?, Muter = ?, Reason = ?, Name = ? WHERE IP = ?");
+					ps.setLong(1, mutetime > 0 ? mutetime + oldtime : mutetime);
+					ps.setString(2, uuid.toString());
+					ps.setString(3, muter);
+					ps.setString(4, reason);
+					ps.setString(5, name);
+					ps.setString(6, ip);
+					ps.execute();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			try {
+				PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO Mutes VALUES (?, ?, ?, ?, ?, ?)");
+				ps.setString(1, uuid.toString());
+				ps.setString(2, ip);
+				ps.setString(3, name);
+				ps.setLong(4, mutetime > 0 ? System.currentTimeMillis() + mutetime : mutetime);
+				ps.setString(5, reason);
+				ps.setString(6, muter);
+				ps.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static String getBanner(UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Banner FROM Bans WHERE UUID = ?");
+			ps.setString(1, uuid.toString());
+			ResultSet rs = ps.executeQuery();
+			String s = "";
+			while(rs.next())s = rs.getString("Banner");
+			return s;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String getBanReason(String ip) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Reason FROM Bans WHERE IP = ?");
+			ps.setString(1, ip);
+			ResultSet rs = ps.executeQuery();
+			String s = "";
+			while(rs.next()) s = rs.getString("Reason");
+			return s;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String getBanner(String ip) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Banner FROM Bans WHERE IP = ?");
+			ps.setString(1, ip);
+			ResultSet rs = ps.executeQuery();
+			String s = "";
+			while(rs.next())s = rs.getString("Banner");
+			return s;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static void updateIPAddress(String ip, String name, UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Bans SET IP = ?, Name = ? WHERE UUID = ?");
+			ps.setString(1, ip);
+			ps.setString(2, name);
+			ps.setString(3, uuid.toString());
+			ps.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static boolean isMuted(String ip, UUID uuid) {
+		return isMuted(uuid) || isIPMuted(ip);
+	}
+
+	public static String getMuteReason(UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Reason FROM Mutes WHERE UUID = ?");
+			ps.setString(1, uuid.toString());
+			ResultSet rs = ps.executeQuery();
+			String s = "";
+			while(rs.next()) s = rs.getString("Reason");
+			return s;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static String getMuter(UUID uuid) {
+		try {
+			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Muter FROM Mutes WHERE UUID = ?");
+			ps.setString(1, uuid.toString());
+			ResultSet rs = ps.executeQuery();
+			String s = "";
+			while(rs.next())s = rs.getString("Muter");
+			return s;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

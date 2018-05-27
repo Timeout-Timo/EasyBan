@@ -20,6 +20,19 @@ ban:
   # Selbstbanversuch
   self: "&cDu kannst dich nicht selbst muten."
   
+  #----------------------- Non-Bungeesupport -------------------------#
+  # Customban-Reason
+  custom: "&cDas Team hat sich für eine besondere Strafe entschieden."
+  # Permaban-Reason
+  perma: "&cDie Serverleitung hat keine Lust auf dein Verhalten!"
+  # Was dem Spieler beim Ban angezeigt wird
+  screen:
+  - "&cDu wurdest auf diesem Netzwerk gebannt."
+  - "&cZeit bin zum Ablauf:&e [date]"
+  - "&cGrund:&e [reason]"
+  - "&cGebannt von:&e [muter]"
+  - "&cDu kannst einen Entmutungsantrag auf dem TS stellen."
+  
 mute:
   # Unmute-Message
   unmute: "&7Du hast den &2Spieler&a [name] &7erfolgreich &centmutet&7."
@@ -27,6 +40,19 @@ mute:
   ignore: "&cDu kannst diesen Spieler nicht muten."
   # Selbstmuteversuch
   self: "&cDu kannst dich nicht selbst muten."
+  
+  #----------------------- Non-Bungeesupport -------------------------#
+  # Custommute-Reason
+  custom: "&cDas Team hat sich für eine besondere Strafe entschieden."
+  # Permaban-Reason
+  perma: "&cDie Serverleitung hat keine Lust auf dein Verhalten!"
+  # Was dem Spieler beim Mute angezeigt wird
+  screen:
+  - "&cDu wurdest auf diesem Netzwerk gemutet."
+  - "&cZeit bin zum Ablauf:&e [date]"
+  - "&cGrund:&e [reason]"
+  - "&cGemutet von:&e [muter]"
+  - "&cDu kannst einen Entmutungsantrag auf dem TS stellen."
 
 delreason:
   # Erfolgreich gelöscht

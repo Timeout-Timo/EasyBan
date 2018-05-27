@@ -22,12 +22,15 @@ public class BanGUI extends JavaPlugin {
 	
 	public static BanGUI plugin;
 	private UTFConfig config;
+	
+	private boolean bungeecord;
 
 	@Override
 	public void onEnable() {
 		plugin = this;
 		ConfigCreator.loadConfigs();
 		config = new UTFConfig(new File(getDataFolder(), "config.yml"));
+		bungeecord = getConfig().getBoolean("bungeecord");
 		
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BanSystem");
 
@@ -52,6 +55,10 @@ public class BanGUI extends JavaPlugin {
 			MySQL.disconnect();
 			Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("mysql.disconnected"));
 		}
+	}
+	
+	public boolean isBungeeCordEnabled() {
+		return bungeecord;
 	}
 	
 	private void registerListener() {
