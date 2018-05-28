@@ -11,6 +11,9 @@ language: 'de_DE'
 # BungeeCord-Support
 bungeecord: true
 
+# IP-Ban 
+ip: true
+
 mysql:
   host: 'localhost'
   port: 3306

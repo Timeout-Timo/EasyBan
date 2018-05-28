@@ -27,7 +27,7 @@ public class BanManager {
 		long violences = BukkitSQLManager.getViolencePoints(uuid);
 		BukkitSQLManager.updateHistory(uuid, violences);
 		
-		PlayerBanEvent event = new PlayerBanEvent(ip, uuid, name, banner, reason);
+		PlayerBanEvent event = new PlayerBanEvent(main.isIPBanEnabled() ? ip : null, uuid, name, banner, reason);
 		main.getServer().getPluginManager().callEvent(event);
 		
 		BukkitSQLManager.addBan(event.getPunishedUUID(), event.getPunishedIP(), event.getPunishedName(), event.getDuration(), event.getDisplay(), event.getReason().getName());
@@ -41,7 +41,7 @@ public class BanManager {
 	}
 	
 	public static void permabanOffline(String ip, String name, UUID uuid, String banner) {
-		PlayerBanEvent event = new PlayerBanEvent(ip, uuid, name, banner);
+		PlayerBanEvent event = new PlayerBanEvent(main.isIPBanEnabled() ? ip : null, uuid, name, banner);
 		main.getServer().getPluginManager().callEvent(event);
 		
 		BukkitSQLManager.addBan(event.getPunishedUUID(), event.getPunishedIP(), event.getPunishedName(), event.getDuration(), event.getPunisher(), event.getDisplay());
@@ -55,7 +55,7 @@ public class BanManager {
 	}
 	
 	public static void customban(String ip, UUID uuid, String name, String banner, long days, long hours, long minutes) {
-		PlayerBanEvent event = new PlayerBanEvent(ip, uuid, name, banner, DateConverter.getTimeMillis(days, hours, minutes));
+		PlayerBanEvent event = new PlayerBanEvent(main.isIPBanEnabled() ? ip : null, uuid, name, banner, DateConverter.getTimeMillis(days, hours, minutes));
 		main.getServer().getPluginManager().callEvent(event);
 		
 		BukkitSQLManager.addBan(event.getPunishedUUID(), event.getPunishedIP(), event.getPunishedName(), event.getDuration(), event.getPunisher(), event.getDisplay());
@@ -69,7 +69,7 @@ public class BanManager {
 	}
 	
 	public static void mute(String ip, UUID uuid, String name, String banner, BukkitReason reason) {
-		PlayerMuteEvent event = new PlayerMuteEvent(ip, uuid, name, banner, reason);
+		PlayerMuteEvent event = new PlayerMuteEvent(main.isIPBanEnabled() ? ip : null, uuid, name, banner, reason);
 		main.getServer().getPluginManager().callEvent(event);
 		
 		BukkitSQLManager.addBan(event.getPunishedUUID(), event.getPunishedIP(), event.getPunishedName(), event.getDuration(), event.getPunisher(), event.getDisplay());
@@ -83,7 +83,7 @@ public class BanManager {
 	}
 	
 	public static void permamute(UUID uuid, String ip, String name, String muter) {
-		PlayerMuteEvent event = new PlayerMuteEvent(ip, uuid, name, muter);
+		PlayerMuteEvent event = new PlayerMuteEvent(main.isIPBanEnabled() ? ip : null, uuid, name, muter);
 		main.getServer().getPluginManager().callEvent(event);
 		
 		BukkitSQLManager.addMute(event.getPunishedUUID(), event.getPunishedIP(), event.getPunishedName(), -1, event.getPunisher(), event.getDisplay());
@@ -98,7 +98,7 @@ public class BanManager {
 	
 	public static void custommute(UUID uuid, String ip, String name, long days, long hours, long minutes, String muter) {
 		long mutetime = DateConverter.getTimeMillis(days, hours, minutes);
-		PlayerMuteEvent event = new PlayerMuteEvent(ip, uuid, name, muter, mutetime);
+		PlayerMuteEvent event = new PlayerMuteEvent(main.isIPBanEnabled() ? ip : null, uuid, name, muter, mutetime);
 		main.getServer().getPluginManager().callEvent(event);
 		
 		BukkitSQLManager.addMute(event.getPunishedUUID(), event.getPunishedIP(), event.getPunishedName(), event.getDuration(), event.getPunisher(), event.getDisplay());

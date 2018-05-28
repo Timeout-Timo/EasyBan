@@ -22,7 +22,7 @@ public class BanManager {
 		long violences = BungeeSQLManager.getPlayerViolences(banned);
 		BungeeSQLManager.updateHistory(banned.getUniqueId(), violences + reason.getViolencePoints());
 		
-		BanEvent event = new BanEvent(banned.getAddress().getAddress().getHostAddress(), banned.getUniqueId(), banner, reason);
+		BanEvent event = new BanEvent(main.isIPBanEnabled() ? banned.getAddress().getAddress().getHostAddress() : null, banned.getUniqueId(), banner, reason);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		List<String> list = ConfigManager.getLanguage().getStringList("ban.screen");
@@ -35,7 +35,7 @@ public class BanManager {
 		long violences = BungeeSQLManager.getPlayerViolences(uuid);
 		BungeeSQLManager.updateHistory(uuid, violences + reason.getViolencePoints());
 		
-		BanEvent event = new BanEvent(ip, uuid, banner, reason);
+		BanEvent event = new BanEvent(main.isIPBanEnabled() ? ip : null, uuid, banner, reason);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		BungeeSQLManager.addBan(uuid, ip, event.getDuration(), event.getPunisher(), event.getReason().getName());
@@ -45,7 +45,7 @@ public class BanManager {
 	public static void permaban(ProxiedPlayer banned, String banner) {
 		List<String> list = ConfigManager.getLanguage().getStringList("ban.screen");
 		
-		BanEvent event = new BanEvent(banned.getAddress().getAddress().getHostAddress(), banned.getUniqueId(), banner);
+		BanEvent event = new BanEvent(main.isIPBanEnabled() ? banned.getAddress().getAddress().getHostAddress() : null, banned.getUniqueId(), banner);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		banned.disconnect(new TextComponent(getString(list, "§4PERMANENT", -1, event.getPunisher())));
@@ -54,7 +54,7 @@ public class BanManager {
 	
 	//PermabanOffline
 	public static void permabanOffline(String ip, UUID uuid, String banner) {
-		BanEvent event = new BanEvent(ip, uuid, banner);
+		BanEvent event = new BanEvent(main.isIPBanEnabled() ? ip : null, uuid, banner);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		BungeeSQLManager.addBan(uuid, ip, -1, event.getPunisher(), event.getDisplay());
@@ -66,7 +66,7 @@ public class BanManager {
 		
 		List<String> list = ConfigManager.getLanguage().getStringList("ban.screen");
 		
-		BanEvent event = new BanEvent(banned.getAddress().getAddress().getHostAddress(), banned.getUniqueId(), banner, bantime);
+		BanEvent event = new BanEvent(main.isIPBanEnabled() ? banned.getAddress().getAddress().getHostAddress() : null, banned.getUniqueId(), banner, bantime);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		banned.disconnect(new TextComponent(getString(list, "§aCustomBan", event.getDuration() + System.currentTimeMillis(), event.getPunisher())));
@@ -76,7 +76,7 @@ public class BanManager {
 	//CustombanOffline
 	public static void custombanOffline(UUID uuid, String ip, long days, long hours, long minutes, String banner) {
 		long bantime = DateConverter.getTimeMillis(days, hours, minutes);
-		BanEvent event = new BanEvent(ip, uuid, banner, bantime);
+		BanEvent event = new BanEvent(main.isIPBanEnabled() ? ip : null, uuid, banner, bantime);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		BungeeSQLManager.addBan(event.getPunishedUUID(), event.getPunishedIP(), event.getDuration(), event.getPunisher(), event.getDisplay());
@@ -88,7 +88,7 @@ public class BanManager {
 		BungeeSQLManager.updateHistory(muted.getUniqueId(), violences + reason.getViolencePoints());
 		List<String> list = ConfigManager.getLanguage().getStringList("mute.screen");
 		
-		MuteEvent event = new MuteEvent(muted.getAddress().getAddress().getHostAddress(), muted.getUniqueId(), muter, reason);
+		MuteEvent event = new MuteEvent(main.isIPBanEnabled() ? muted.getAddress().getAddress().getHostAddress() : null, muted.getUniqueId(), muter, reason);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		muted.sendMessage(new TextComponent(getString(list, event.getReason().getDisplayName(), event.getDuration() + System.currentTimeMillis(), event.getPunisher())));
@@ -100,7 +100,7 @@ public class BanManager {
 		long violences = BungeeSQLManager.getPlayerViolences(uuid);
 		BungeeSQLManager.updateHistory(uuid, violences + reason.getViolencePoints());
 		
-		MuteEvent event = new MuteEvent(ip, uuid, muter, reason);
+		MuteEvent event = new MuteEvent(main.isIPBanEnabled() ? ip : null, uuid, muter, reason);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		BungeeSQLManager.addMute(event.getPunishedUUID(), event.getPunishedIP(), event.getDuration(), event.getPunisher(), event.getReason().getName());
@@ -109,7 +109,7 @@ public class BanManager {
 	//Permamute
 	public static void permamute(ProxiedPlayer player, String muter) {
 		List<String> list = ConfigManager.getLanguage().getStringList("mute.screen");
-		MuteEvent event = new MuteEvent(player.getAddress().getAddress().getHostAddress(), player.getUniqueId(), muter);
+		MuteEvent event = new MuteEvent(main.isIPBanEnabled() ? player.getAddress().getAddress().getHostAddress() : null, player.getUniqueId(), muter);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		BungeeSQLManager.addMute(player, event.getDuration(), event.getPunisher(), event.getDisplay());
@@ -118,7 +118,7 @@ public class BanManager {
 	
 	//PermamuteOffline
 	public static void permamuteOffline(UUID uuid, String ip, String muter) {
-		MuteEvent event = new MuteEvent(ip, uuid, muter);
+		MuteEvent event = new MuteEvent(main.isIPBanEnabled() ? ip : null, uuid, muter);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		BungeeSQLManager.addMute(event.getPunishedUUID(), event.getPunishedIP(), event.getDuration(), event.getPunisher(), event.getDisplay());
@@ -129,7 +129,7 @@ public class BanManager {
 		long mutetime = DateConverter.getTimeMillis(days, hours, minutes);
 		List<String> list = ConfigManager.getLanguage().getStringList("mute.screen");
 		
-		MuteEvent event = new MuteEvent(p.getAddress().getAddress().getHostAddress(), p.getUniqueId(), muter, mutetime);
+		MuteEvent event = new MuteEvent(main.isIPBanEnabled() ? p.getAddress().getAddress().getHostAddress() : null, p.getUniqueId(), muter, mutetime);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		BungeeSQLManager.addMute(p, event.getDuration(), event.getPunisher(), event.getDisplay());
@@ -140,7 +140,7 @@ public class BanManager {
 	public static void custommuteOffline(UUID uuid, String ip, long days, long hours, long minutes, String muter) {
 		long mutetime = DateConverter.getTimeMillis(days, hours, minutes);
 		
-		MuteEvent event = new MuteEvent(ip, uuid, muter, mutetime);
+		MuteEvent event = new MuteEvent(main.isIPBanEnabled() ? ip : null, uuid, muter, mutetime);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		BungeeSQLManager.addMute(event.getPunishedUUID(), event.getPunishedIP(), event.getDuration(), event.getPunisher(), event.getDisplay());

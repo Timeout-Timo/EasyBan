@@ -1,6 +1,7 @@
 package de.timeout.utils;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DateConverter {
 
@@ -10,16 +11,10 @@ public class DateConverter {
 	
 	public static String getDate(long millis) {
 		if(millis > 0) {
-			Calendar c = Calendar.getInstance();
-			c.setTimeInMillis(millis);
-			
-			int years = c.get(Calendar.YEAR);
-			int months = c.get(Calendar.MONTH);
-			int day = c.get(Calendar.DAY_OF_MONTH);
-			int hour = c.get(Calendar.HOUR_OF_DAY);
-			int minute = c.get(Calendar.MINUTE);
-			
-			return "§c" + day + "." + months + "." + years + " - " + hour + ":" + minute;
+			Date date = new Date(millis);
+			SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy - HH:mm");
+			String s = format.format(date);
+			return s;
 		} else return "§cPERMANENT";
 	}
 	

@@ -8,6 +8,9 @@
 # Sprache des Systems
 language: de_DE
 
+# IP-Bans a player
+ip: true
+
 # MySQL-Settings
 mysql:
   host: "localhost"

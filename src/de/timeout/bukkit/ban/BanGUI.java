@@ -25,6 +25,7 @@ public class BanGUI extends JavaPlugin {
 	private UTFConfig config;
 	
 	private boolean bungeecord;
+	private boolean ip;
 
 	@Override
 	public void onEnable() {
@@ -32,6 +33,7 @@ public class BanGUI extends JavaPlugin {
 		ConfigCreator.loadConfigs();
 		config = new UTFConfig(new File(getDataFolder(), "config.yml"));
 		bungeecord = getConfig().getBoolean("bungeecord");
+		ip = getConfig().getBoolean("ip");
 		
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BanSystem");
 
@@ -60,6 +62,10 @@ public class BanGUI extends JavaPlugin {
 	
 	public boolean isBungeeCordEnabled() {
 		return bungeecord;
+	}
+	
+	public boolean isIPBanEnabled() {
+		return ip;
 	}
 	
 	private void registerListener() {

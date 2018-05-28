@@ -21,11 +21,14 @@ public class BanSystem extends Plugin implements Listener {
 	public static BanSystem plugin;
 	private static Configuration config;
 	
+	private boolean ip;
+	
 	@Override
 	public void onEnable() {
 		plugin = this;
 		ConfigCreator.loadConfigurations();
 		reloadConfig();
+		ip = getConfig().getBoolean("ip");
 		
 		BungeeCord.getInstance().registerChannel("BanSystem");
 				
@@ -35,7 +38,6 @@ public class BanSystem extends Plugin implements Listener {
 			setupMySQL();
 			getProxy().getConsole().sendMessage(new TextComponent(getLanguage("prefix") + getLanguage("mysql.connected")));
 			registerListener();
-			registerCommands();
 		} else {
 			plugin.getProxy().getConsole().sendMessage(new TextComponent(getLanguage("prefix") + getLanguage("mysql.failed")));
 		}
@@ -51,10 +53,6 @@ public class BanSystem extends Plugin implements Listener {
 		BungeeCord.getInstance().getPluginManager().registerListener(this, new ExecutorManager());
 		BungeeCord.getInstance().getPluginManager().registerListener(this, new TabCompleterManager());
 	}
-	
-	private void registerCommands() {
-		
-	}
 		
 	private void setupMySQL() {
 		try {
@@ -63,6 +61,10 @@ public class BanSystem extends Plugin implements Listener {
 			MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS Bans(UUID VARCHAR(100), IP VARCHAR(100), Name VARCHAR(100), Reason VARCHAR(100), Unban BIGINT, Banner VARCHAR(100))").executeUpdate();
 			MySQL.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS Mutes(UUID VARCHAR(100), IP VARCHAR(100), Name VARCHAR(100), Reason VARCHAR(100), Unmute BIGINT, Muter VARCHAR(100))").executeUpdate();
 		} catch (SQLException e) {}
+	}
+	
+	public boolean isIPBanEnabled() {
+		return ip;
 	}
 	
 	public void reloadConfig() {
