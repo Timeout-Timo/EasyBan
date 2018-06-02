@@ -14,9 +14,15 @@ bungeecord: true
 # IP-Ban 
 ip: true
 
+#Used Databases
+database: mysql
+
 mysql:
   host: 'localhost'
   port: 3306
   database: 'bansystem'
   username: 'username'
   password: 'password'
+  
+file:
+  path: '/databases'

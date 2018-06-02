@@ -14,7 +14,7 @@ import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-public class ExecutorManager implements Listener {
+public class SQLExecutorManager implements Listener {
 
 	@EventHandler
 	public void onBanExecute(LoginEvent event) {
@@ -63,7 +63,7 @@ public class ExecutorManager implements Listener {
 					} else {
 						event.setCancelled(true);
 						List<String> list = ConfigManager.getLanguage().getStringList("mute.screen");
-						String reason = BungeeSQLManager.getMuteReason(p);
+						String reason = BungeeSQLManager.getMuteReason(p.getUniqueId());
 						String muter = BungeeSQLManager.getMuter(p);
 						
 						p.sendMessage(new TextComponent(getString(list, reason, uuidmute > ipmute ? uuidmute : ipmute, muter)));

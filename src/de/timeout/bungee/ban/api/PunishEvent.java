@@ -9,19 +9,21 @@ public abstract class PunishEvent extends Event {
 
 	protected UUID punishedUUID;
 	protected String punishedIP;
+	protected String punishedName;
 	protected String punisher;
 	
 	protected Reason reason;
 	protected String display;
 	protected long duration;
 	
-	public PunishEvent(String ip, UUID uuid, String punisher, Reason reason, String display, long duration) {
+	public PunishEvent(String ip, UUID uuid, String punished, String punisher, Reason reason, String display, long duration) {
 		this.punishedUUID = uuid;
 		this.punishedIP = ip;
 		this.punisher = punisher;
 		this.reason = reason;
 		this.display = display;
 		this.duration = duration;
+		this.punishedName = punished;
 	}
 
 	public UUID getPunishedUUID() {
@@ -46,5 +48,9 @@ public abstract class PunishEvent extends Event {
 
 	public long getDuration() {
 		return duration;
+	}
+
+	public String getPunishedName() {
+		return punishedName;
 	}
 }

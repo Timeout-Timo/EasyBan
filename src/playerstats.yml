@@ -1,0 +1,18 @@
+# EasyBan File Database
+# version: 1.0
+# Author: Timeout
+
+name:
+uuid:
+ip:
+violences: 0
+
+banned: false
+muted: false
+
+unban: 0
+unmute: 0
+
+history:
+  bans:
+  mutes:

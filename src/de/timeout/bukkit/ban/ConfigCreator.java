@@ -2,8 +2,10 @@ package de.timeout.bukkit.ban;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -18,6 +20,23 @@ public class ConfigCreator {
 		loadResource(main, "bukkit/config.yml");
 		loadResource(main, "bukkit/language/de_DE.yml");
 		loadResource(main, "bukkit/language/en_US.yml");
+	}
+	
+	public static void loadDatabases() {
+		loadResource(main, "bukkit/databases/iphistory.yml");
+		loadResource(main, "bukkit/databases/reasons.yml");
+	}
+	
+	public static void createPlayerFiles(File file, UUID uuid) {
+		try {
+			file.createNewFile();
+			try(InputStream in = main.getResource("playerstats.yml");
+					OutputStream out = new FileOutputStream(file)) {
+				ByteStreams.copy(in, out);
+			}
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static void loadResource(Plugin plugin, String resource) {

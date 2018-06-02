@@ -11,6 +11,9 @@ language: de_DE
 # IP-Bans a player
 ip: true
 
+#Used Databases
+database: mysql
+
 # MySQL-Settings
 mysql:
   host: "localhost"
@@ -18,3 +21,6 @@ mysql:
   database: "BanSystem"
   username: "Username"
   password: "Password"
+
+file:
+  path: '/databases'

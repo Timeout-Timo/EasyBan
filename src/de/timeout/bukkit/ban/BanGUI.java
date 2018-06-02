@@ -10,6 +10,7 @@ import de.timeout.bukkit.ban.commands.AddreasonCommand;
 import de.timeout.bukkit.ban.commands.BanCommand;
 import de.timeout.bukkit.ban.commands.DelreasonCommand;
 import de.timeout.bukkit.ban.commands.MuteCommand;
+import de.timeout.bukkit.ban.commands.TestCommand;
 import de.timeout.bukkit.ban.commands.UnbanCommand;
 import de.timeout.bukkit.ban.commands.UnmuteCommand;
 import de.timeout.bukkit.ban.gui.AddreasonGUI;
@@ -26,6 +27,7 @@ public class BanGUI extends JavaPlugin {
 	
 	private boolean bungeecord;
 	private boolean ip;
+	private boolean file;
 
 	@Override
 	public void onEnable() {
@@ -34,21 +36,27 @@ public class BanGUI extends JavaPlugin {
 		config = new UTFConfig(new File(getDataFolder(), "config.yml"));
 		bungeecord = getConfig().getBoolean("bungeecord");
 		ip = getConfig().getBoolean("ip");
+		String database = getConfig().getString("database");
 		
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BanSystem");
 
 		//MySQL
-		MySQL.connect(getConfig().getString("mysql.host"), getConfig().getInt("mysql.port"), getConfig().getString("mysql.database"),
-				getConfig().getString("mysql.username"), getConfig().getString("mysql.password"));
-		if(MySQL.isConnected()) {
-			Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("mysql.connected"));
-			setupMySQL();
-			
-			registerCommands();
-			registerListener();
+		if(database.equalsIgnoreCase("sql") || database.equalsIgnoreCase("mysql")) {
+			MySQL.connect(getConfig().getString("mysql.host"), getConfig().getInt("mysql.port"), getConfig().getString("mysql.database"),
+					getConfig().getString("mysql.username"), getConfig().getString("mysql.password"));
+			if(MySQL.isConnected()) {
+				Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("mysql.connected"));
+				setupMySQL();
+				
+				registerCommands();
+				registerListener();
+			} else {
+				Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("error.sqlFailed"));
+				Bukkit.getPluginManager().disablePlugin(plugin);
+			}
 		} else {
-			Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("error.sqlFailed"));
-			Bukkit.getPluginManager().disablePlugin(plugin);
+			file = true;
+			if(!bungeecord)ConfigCreator.loadDatabases();
 		}
 	}
 	
@@ -68,6 +76,10 @@ public class BanGUI extends JavaPlugin {
 		return ip;
 	}
 	
+	public boolean isFileSupportEnabled() {
+		return file;
+	}
+	
 	private void registerListener() {
 		Bukkit.getPluginManager().registerEvents(new BanCommandGUI(), this);
 		Bukkit.getPluginManager().registerEvents(new MuteCommandGUI(), this);
@@ -82,6 +94,7 @@ public class BanGUI extends JavaPlugin {
 		this.getCommand("delreason").setExecutor(new DelreasonCommand());
 		this.getCommand("unban").setExecutor(new UnbanCommand());
 		this.getCommand("unmute").setExecutor(new UnmuteCommand());
+		this.getCommand("test").setExecutor(new TestCommand());
 	}
 	
 	private void setupMySQL() {

@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import de.timeout.bungee.ban.manager.ExecutorManager;
+import de.timeout.bungee.ban.manager.FileExecutorManager;
+import de.timeout.bungee.ban.manager.SQLExecutorManager;
 import de.timeout.bungee.ban.manager.WrapperManager;
 import de.timeout.bungee.ban.utils.TabCompleterManager;
 import de.timeout.utils.MySQL;
@@ -22,6 +23,7 @@ public class BanSystem extends Plugin implements Listener {
 	private static Configuration config;
 	
 	private boolean ip;
+	private boolean file;
 	
 	@Override
 	public void onEnable() {
@@ -29,18 +31,24 @@ public class BanSystem extends Plugin implements Listener {
 		ConfigCreator.loadConfigurations();
 		reloadConfig();
 		ip = getConfig().getBoolean("ip");
+		String database = getConfig().getString("database");
 		
 		BungeeCord.getInstance().registerChannel("BanSystem");
 				
-		MySQL.connect(getConfig().getString("mysql.host"), getConfig().getInt("mysql.port"),
-				getConfig().getString("mysql.database"), getConfig().getString("mysql.username"), getConfig().getString("mysql.password"));
-		if(MySQL.isConnected()) {
-			setupMySQL();
-			getProxy().getConsole().sendMessage(new TextComponent(getLanguage("prefix") + getLanguage("mysql.connected")));
-			registerListener();
-		} else {
-			plugin.getProxy().getConsole().sendMessage(new TextComponent(getLanguage("prefix") + getLanguage("mysql.failed")));
-		}
+		if(database.equalsIgnoreCase("mysql") || database.equalsIgnoreCase("sql")) {
+			MySQL.connect(getConfig().getString("mysql.host"), getConfig().getInt("mysql.port"),
+					getConfig().getString("mysql.database"), getConfig().getString("mysql.username"), getConfig().getString("mysql.password"));
+			if(MySQL.isConnected()) {
+				setupMySQL();
+				getProxy().getConsole().sendMessage(new TextComponent(getLanguage("prefix") + getLanguage("mysql.connected")));
+				registerListener();
+			} else {
+				plugin.getProxy().getConsole().sendMessage(new TextComponent(getLanguage("prefix") + getLanguage("mysql.failed")));
+			}
+		} else if(database.equalsIgnoreCase("file")) {
+			file = true;
+			ConfigCreator.loadDatabases();
+		} 
 	}
 
 	@Override
@@ -50,7 +58,8 @@ public class BanSystem extends Plugin implements Listener {
 	
 	private void registerListener() {
 		BungeeCord.getInstance().getPluginManager().registerListener(this, new WrapperManager());
-		BungeeCord.getInstance().getPluginManager().registerListener(this, new ExecutorManager());
+		if(MySQL.isConnected())BungeeCord.getInstance().getPluginManager().registerListener(this, new SQLExecutorManager());
+		else BungeeCord.getInstance().getPluginManager().registerListener(this, new FileExecutorManager());
 		BungeeCord.getInstance().getPluginManager().registerListener(this, new TabCompleterManager());
 	}
 		
@@ -65,6 +74,10 @@ public class BanSystem extends Plugin implements Listener {
 	
 	public boolean isIPBanEnabled() {
 		return ip;
+	}
+	
+	public boolean isUsingFiles() {
+		return file;
 	}
 	
 	public void reloadConfig() {

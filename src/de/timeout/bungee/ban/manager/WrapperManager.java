@@ -1,7 +1,9 @@
 package de.timeout.bungee.ban.manager;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -10,9 +12,12 @@ import java.util.UUID;
 import com.google.gson.JsonParser;
 
 import de.timeout.bungee.ban.BanSystem;
+import de.timeout.bungee.ban.filemanager.DecidationManager;
 import de.timeout.utils.Reason;
 import de.timeout.utils.Reason.ReasonType;
+import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PluginMessageEvent;
@@ -46,7 +51,7 @@ public class WrapperManager implements Listener {
 						BanManager.ban(t, banner, r);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + bansuccess.replace("[name]", name)));
 					} else {
-						BanManager.banOffline(null, getUUIDFromMojangServer(name), banner, r);
+						BanManager.banOffline(null, getUUIDFromMojangServer(name), name, banner, r);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + bansuccess.replace("[name]", name)));
 					}
 				} else if(channel.equalsIgnoreCase("PermaBan")) {
@@ -59,7 +64,7 @@ public class WrapperManager implements Listener {
 						BanManager.permaban(t, banner);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + bansuccess.replace("[name]", name)));
 					} else {
-						BanManager.permabanOffline(null, getUUIDFromMojangServer(name), banner);
+						BanManager.permabanOffline(null, getUUIDFromMojangServer(name), name, banner);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + bansuccess.replace("[name]", name)));
 					}
 				} else if(channel.equalsIgnoreCase("CustomBan")) {
@@ -75,7 +80,7 @@ public class WrapperManager implements Listener {
 						BanManager.customban(t, days, hours, minutes, banner);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + bansuccess.replace("[name]", name)));
 					} else {
-						BanManager.custombanOffline(getUUIDFromMojangServer(name), null, days, hours, minutes, banner);
+						BanManager.custombanOffline(getUUIDFromMojangServer(name), null, name, days, hours, minutes, banner);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + bansuccess.replace("[name]", name)));
 					}
 				} else if(channel.equalsIgnoreCase("Mute")) {
@@ -90,7 +95,7 @@ public class WrapperManager implements Listener {
 						BanManager.mute(t, muter, r);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + mutesuccess.replace("[name]", name)));
 					} else {
-						BanManager.muteOffline(getUUIDFromMojangServer(name), null, muter, r);
+						BanManager.muteOffline(getUUIDFromMojangServer(name), null, name, muter, r);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + mutesuccess.replace("[name]", name)));
 					}
 				} else if(channel.equalsIgnoreCase("PermaMute")) {
@@ -103,7 +108,7 @@ public class WrapperManager implements Listener {
 						BanManager.permamute(t, muter);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + mutesuccess.replace("[name]", name)));
 					} else {
-						BanManager.permamuteOffline(getUUIDFromMojangServer(name), null, muter);
+						BanManager.permamuteOffline(getUUIDFromMojangServer(name), null, name, muter);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + mutesuccess.replace("[name]", name)));
 					}
 				} else if(channel.equalsIgnoreCase("CustomMute")) {
@@ -119,8 +124,22 @@ public class WrapperManager implements Listener {
 						BanManager.custommute(t, days, hours, minutes, muter);
 						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + mutesuccess.replace("[name]", name)));
 					} else {
-						
+						BanManager.custommuteOffline(getUUIDFromMojangServer(name), null, name, days, hours, minutes, muter);
+						getProxiedPlayer(con).sendMessage(new TextComponent(prefix + mutesuccess.replace("[name]", name)));
 					}
+				} else if(channel.equalsIgnoreCase("isBanned")) {
+					System.out.println("Von Bukkit Empfangen");
+					UUID uuid = UUID.fromString(in.readUTF());
+					
+					ByteArrayOutputStream stream = new ByteArrayOutputStream();
+					DataOutputStream out = new DataOutputStream(stream);
+					
+					out.writeUTF("isBanned");
+					out.writeBoolean(DecidationManager.isBanned(uuid));
+					
+					ServerInfo server = BungeeCord.getInstance().getPlayer(con.toString()).getServer().getInfo();
+					server.sendData("BanSystem", stream.toByteArray());
+					System.out.println("An Bukkit gesendet");
 				}
 			} catch(IOException e) {}
 		}

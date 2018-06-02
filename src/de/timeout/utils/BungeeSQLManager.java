@@ -26,7 +26,7 @@ public class BungeeSQLManager {
 		return false;
 	}
 	
-	private static boolean isBannedByUUID(UUID uuid) {
+	public static boolean isBannedByUUID(UUID uuid) {
 		if(!uuid.equals(null)) {
 			try {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT UUID FROM Bans WHERE UUID = ?");
@@ -40,7 +40,7 @@ public class BungeeSQLManager {
 		return false;
 	}
 	
-	private static boolean isBannedByIP(String ip) {
+	public static boolean isBannedByIP(String ip) {
 		if(!ip.equals(null)) {
 			try {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT IP FROM Bans WHERE IP = ?");
@@ -54,7 +54,7 @@ public class BungeeSQLManager {
 		return false;
 	}
 	
-	private static boolean isMutedByIP(String ip) {
+	public static boolean isMutedByIP(String ip) {
 		if(!ip.equals(null)) {
 			try {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT IP FROM Mutes WHERE IP = ?");
@@ -68,7 +68,7 @@ public class BungeeSQLManager {
 		return false;
 	}
 	
-	private static boolean isMutedByUUID(UUID uuid) {
+	public static boolean isMutedByUUID(UUID uuid) {
 		if(uuid.equals(null)) {
 			try {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT UUID FROM Mutes WHERE UUID = ?");
@@ -426,17 +426,18 @@ public class BungeeSQLManager {
 		return 0;
 	}
 
-	public static void addBan(UUID uuid, String ip, long bantime, String banner, String reason) {
+	public static void addBan(UUID uuid, String ip, String name, long bantime, String banner, String reason) {
 		if(isBannedByUUID(uuid)) {
 			long oldtime = getBanTime(uuid);
 			if(oldtime > 0) {
 				try {
-					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Bans SET UNBAN = ?, IP = ?, Banner = ?, Reason = ? WHERE UUID = ?");
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Bans SET UNBAN = ?, IP = ?, Banner = ?, Reason = ?, Name = ? WHERE UUID = ?");
 					ps.setLong(1, bantime > 0 ? bantime + oldtime : bantime);
 					ps.setString(2, ip);
 					ps.setString(3, banner);
 					ps.setString(4, reason);
-					ps.setString(5, uuid.toString());
+					ps.setString(5, name);
+					ps.setString(6, uuid.toString());
 					ps.execute();
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -446,12 +447,13 @@ public class BungeeSQLManager {
 			long oldtime = getBanTime(ip);
 			if(oldtime > 0) {
 				try {
-					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Bans SET Unban = ?, UUID = ?, Banner = ?, Reason = ? WHERE IP = ?");
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Bans SET Unban = ?, UUID = ?, Banner = ?, Reason = ?, Name = ? WHERE IP = ?");
 					ps.setLong(1, bantime > 0 ? bantime + oldtime : bantime);
 					ps.setString(2, uuid.toString());
 					ps.setString(3, banner);
 					ps.setString(4, reason);
-					ps.setString(5, ip);
+					ps.setString(5, name);
+					ps.setString(6, ip);
 					ps.execute();
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -462,7 +464,7 @@ public class BungeeSQLManager {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO Bans VALUES (?, ?, ?, ?, ?, ?)");
 				ps.setString(1, uuid.toString());
 				ps.setString(2, ip);
-				ps.setString(3, null);
+				ps.setString(3, name);
 				ps.setLong(4, bantime > 0 ? System.currentTimeMillis() + bantime : bantime);
 				ps.setString(5, reason);
 				ps.setString(6, banner);
@@ -473,17 +475,18 @@ public class BungeeSQLManager {
 		}
 	}
 	
-	public static void addMute(UUID uuid, String ip, long mutetime, String muter, String reason) {
+	public static void addMute(UUID uuid, String ip, String name, long mutetime, String muter, String reason) {
 		if(isMutedByUUID(uuid)) {
 			long oldtime = getMuteTime(uuid);
 			if(oldtime > 0) {
 				try {
-					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Mutes SET Unmute = ?, IP = ?, Banner = ?, Reason = ? WHERE UUID = ?");
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Mutes SET Unmute = ?, IP = ?, Banner = ?, Reason = ?, Name = ? WHERE UUID = ?");
 					ps.setLong(1, mutetime > 0 ? mutetime + oldtime : mutetime);
 					ps.setString(2, ip);
 					ps.setString(3, muter);
 					ps.setString(4, reason);
-					ps.setString(5, uuid.toString());
+					ps.setString(5, name);
+					ps.setString(6, uuid.toString());
 					ps.execute();
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -493,12 +496,13 @@ public class BungeeSQLManager {
 			long oldtime = getMuteTime(ip);
 			if(oldtime > 0) {
 				try {
-					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Mutes SET Unmute = ?, UUID = ?, Banner = ?, Reason = ? WHERE IP = ?");
+					PreparedStatement ps = MySQL.getConnection().prepareStatement("UPDATE Mutes SET Unmute = ?, UUID = ?, Banner = ?, Reason = ?, Name = ? WHERE IP = ?");
 					ps.setLong(1, mutetime > 0 ? mutetime + oldtime : mutetime);
 					ps.setString(2, uuid.toString());
 					ps.setString(3, muter);
 					ps.setString(4, reason);
-					ps.setString(5, ip);
+					ps.setString(5, name);
+					ps.setString(6, ip);
 					ps.execute();
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -509,7 +513,7 @@ public class BungeeSQLManager {
 				PreparedStatement ps = MySQL.getConnection().prepareStatement("INSERT INTO Mutes VALUES(?, ?, ?, ?, ?, ?)");
 				ps.setString(1, uuid.toString());
 				ps.setString(2, ip);
-				ps.setString(3, null);
+				ps.setString(3, name);
 				ps.setLong(4, mutetime > 0 ? mutetime + System.currentTimeMillis() : mutetime);
 				ps.setString(5, reason);
 				ps.setString(6, muter);
@@ -624,10 +628,10 @@ public class BungeeSQLManager {
 		}
 	}
 
-	public static String getMuteReason(ProxiedPlayer p) {
+	public static String getMuteReason(UUID uuid) {
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Reason FROM Mutes WHERE UUID = ?");
-			ps.setString(1, p.getUniqueId().toString());
+			ps.setString(1, uuid.toString());
 			ResultSet rs = ps.executeQuery();
 			String s = "";
 			while(rs.next()) {
