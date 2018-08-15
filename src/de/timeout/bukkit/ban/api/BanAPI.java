@@ -12,7 +12,6 @@ import com.google.common.io.ByteStreams;
 import com.google.gson.JsonParser;
 
 import de.timeout.bukkit.ban.BanGUI;
-import de.timeout.bukkit.ban.filemanager.DecidationManager;
 import de.timeout.utils.BukkitSQLManager;
 
 public class BanAPI {
@@ -151,7 +150,7 @@ public class BanAPI {
 	}
 	
 	public static boolean isBanned(UUID uuid) {
-		return DecidationManager.isBanned(uuid);
+		return BukkitSQLManager.isBanned(uuid);
 	}
 	
 	public static boolean isBanned(Player player) {
