@@ -3,11 +3,13 @@ package de.timeout.bukkit.ban.commands;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import de.timeout.bukkit.ban.BanGUI;
+import de.timeout.bukkit.ban.manager.DecidationManager;
 import de.timeout.utils.BukkitSQLManager;
 import de.timeout.utils.Reason;
 import de.timeout.utils.Reason.ReasonType;
@@ -30,7 +32,8 @@ public class UnbanCommand implements CommandExecutor {
 		if(sender.hasPermission("easyban.unban")) {
 			if(args.length == 1) {
 				String name = args[0];
-				if(BukkitSQLManager.isBanned(name)) {
+				OfflinePlayer op = Bukkit.getServer().getOfflinePlayer(name);
+				if(DecidationManager.isBanned(op.getUniqueId())) {
 					Reason reason = new Reason(BukkitSQLManager.getBanReasonName(name), ReasonType.BAN);
 					UUID uuid = Bukkit.getServer().getOfflinePlayer(name).getUniqueId();
 					BukkitSQLManager.updateHistory(uuid, -reason.getViolencePoints());

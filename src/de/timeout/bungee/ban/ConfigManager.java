@@ -21,6 +21,9 @@ public class ConfigManager {
 	private static File ipFile = null;
 	private static Configuration ipCfg = null;
 	
+	private static File reasonsFile = null;
+	private static Configuration reasonCfg = null;
+	
 	public static void loadLanguageConfig() throws IOException {
 		if(langFile == null) {
 			String name = main.getConfig().getString("language") + ".yml";
@@ -101,5 +104,27 @@ public class ConfigManager {
 			return uuids;
 		} catch(NullPointerException e) {}
 		return null;
+	}
+	
+	public static void reloadReasons() {
+		try {
+			if(reasonsFile == null)reasonsFile = new File("/databases/reasons.yml");
+			reasonCfg = ConfigurationProvider.getProvider(YamlConfiguration.class).load(reasonsFile);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Configuration getReasons() {
+		if(reasonCfg == null)reloadReasons();
+		return reasonCfg;
+	}
+	
+	public static void saveReasons() {
+		try {
+			ConfigurationProvider.getProvider(YamlConfiguration.class).save(reasonCfg, reasonsFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
  }

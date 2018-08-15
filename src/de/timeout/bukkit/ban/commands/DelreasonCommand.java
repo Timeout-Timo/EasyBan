@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import de.timeout.bukkit.ban.BanGUI;
 import de.timeout.bukkit.ban.api.DelReasonEvent;
+import de.timeout.bukkit.ban.netty.packets.PacketPlayOutDelReason;
 import de.timeout.bukkit.ban.utils.BukkitReason;
 import de.timeout.utils.BukkitSQLManager;
 
@@ -32,7 +33,13 @@ public class DelreasonCommand implements CommandExecutor {
 					DelReasonEvent event = new DelReasonEvent(reason);
 					Bukkit.getPluginManager().callEvent(event);
 					if(!event.isCancelled()) {
-						BukkitSQLManager.removeReason(name);
+						if(main.isFileSupportEnabled()) {
+							if(main.isBungeeCordEnabled()) {
+								PacketPlayOutDelReason packet = new PacketPlayOutDelReason(event.getReason().getName(), 
+										event.getReason().getType());
+								main.getNettyClient().sendPacket(packet);
+							}
+						} else BukkitSQLManager.removeReason(event.getReason().getName());
 						sender.sendMessage(prefix + success.replace("[reason]", name));
 					}
 				} else sender.sendMessage(prefix + notExists);

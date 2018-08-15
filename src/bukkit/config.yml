@@ -26,3 +26,10 @@ mysql:
   
 file:
   path: '/databases'
+  
+  # Netty-Server
+  client:
+    # Address of your BungeeCord-Server
+    host: '127.0.0.1'
+    # Port in BungeeCord Config
+    port: 8000

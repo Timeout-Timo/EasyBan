@@ -3,6 +3,8 @@ package de.timeout.utils;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import de.timeout.bungee.ban.ConfigManager;
+
 public class Reason {
 	
 	public enum Stage{FIRST, SECOND, THIRD;}
@@ -111,6 +113,20 @@ public class Reason {
 
 	public String getDisplay() {
 		return display;
+	}
+	
+	public void saveToFile() {
+		ConfigManager.getReasons().set(name.toLowerCase() + ".name", name);
+		ConfigManager.getReasons().set(name.toLowerCase() + ".time.first", firsttime);
+		ConfigManager.getReasons().set(name.toLowerCase() + ".time.second", secondtime);
+		ConfigManager.getReasons().set(name.toLowerCase() + ".time.third", thirdtime);
+		ConfigManager.getReasons().set(name.toLowerCase() + ".line.first", firstToSecond);
+		ConfigManager.getReasons().set(name.toLowerCase() + ".line.second", secondToThird);
+		ConfigManager.getReasons().set(name.toLowerCase() + ".points", points);
+		ConfigManager.getReasons().set(name.toLowerCase() + ".type", type.getName());
+		ConfigManager.getReasons().set(name.toLowerCase() + ".display", display);
+		
+		ConfigManager.saveReasons();
 	}
 	
 	public void saveToMySQL() {

@@ -105,7 +105,11 @@ public class AddreasonGUI implements Listener {
 											AddReasonEvent addEvent = new AddReasonEvent(reason);
 											Bukkit.getPluginManager().callEvent(addEvent);
 											if(!addEvent.isCancelled()) {
-												reason.saveToMySQL();
+												if(!main.isFileSupportEnabled())
+													reason.saveToMySQL();
+												else {
+													if(main.isBungeeCordEnabled())reason.sendToBungeeCord();
+												}
 												
 												deleteCache(p);
 												event.setWillClose(true);

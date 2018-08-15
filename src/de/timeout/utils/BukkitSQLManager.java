@@ -1,21 +1,16 @@
 package de.timeout.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 
 import de.timeout.bukkit.ban.utils.BukkitReason;
+import de.timeout.bukkit.ban.utils.ItemStackAPI;
 import de.timeout.utils.Reason.ReasonType;
 
 public class BukkitSQLManager {
@@ -28,7 +23,7 @@ public class BukkitSQLManager {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				BukkitReason r = new BukkitReason(rs.getString("Name"), ReasonType.BAN, rs.getLong("First"), rs.getLong("Second"), rs.getLong("Points"),
-						rs.getLong("FirstBan"), rs.getLong("SecondBan"), rs.getLong("ThirdBan"), rs.getString("Display"), decodeItemStack(rs.getString("Title")));
+						rs.getLong("FirstBan"), rs.getLong("SecondBan"), rs.getLong("ThirdBan"), rs.getString("Display"), ItemStackAPI.decodeItemStack(rs.getString("Title")));
 				list.add(r);
 			}
 		} catch (SQLException e) {
@@ -45,7 +40,7 @@ public class BukkitSQLManager {
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				BukkitReason r = new BukkitReason(rs.getString("Name"), ReasonType.BAN, rs.getLong("First"), rs.getLong("Second"), rs.getLong("Points"),
-						rs.getLong("FirstBan"), rs.getLong("SecondBan"), rs.getLong("ThirdBan"), rs.getString("Display"), decodeItemStack(rs.getString("Title")));
+						rs.getLong("FirstBan"), rs.getLong("SecondBan"), rs.getLong("ThirdBan"), rs.getString("Display"), ItemStackAPI.decodeItemStack(rs.getString("Title")));
 				list.add(r);
 
 			}
@@ -56,7 +51,7 @@ public class BukkitSQLManager {
 	}
 	
 	public static String getNameByItemStack(ItemStack title, String type) {
-		String encoded = encodeItemStack(title);
+		String encoded = ItemStackAPI.encodeItemStack(title);
 		try {
 			PreparedStatement ps = MySQL.getConnection().prepareStatement("SELECT Name FROM Settings WHERE Title = ? AND Type = ?");
 			ps.setString(1, encoded);
@@ -99,7 +94,7 @@ public class BukkitSQLManager {
 			while(rs.next()) {
 				s = rs.getString("Title");
 			}
-			return decodeItemStack(s);
+			return ItemStackAPI.decodeItemStack(s);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -263,32 +258,6 @@ public class BukkitSQLManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	@SuppressWarnings("resource")
-	public static String encodeItemStack(ItemStack item) {
-		try {
-			ByteArrayOutputStream str = new ByteArrayOutputStream();
-			BukkitObjectOutputStream data = new BukkitObjectOutputStream(str);
-			data.writeObject(item);
-			return Base64.getEncoder().encodeToString(str.toByteArray());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-	
-	@SuppressWarnings("resource")
-	public static ItemStack decodeItemStack(String base64) {
-		try {
-			ByteArrayInputStream str = new ByteArrayInputStream(Base64.getDecoder().decode(base64));
-			BukkitObjectInputStream data = new BukkitObjectInputStream(str);
-			ItemStack item = (ItemStack) data.readObject();
-			return item;
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 	
 	public static void removeReason(String name) {

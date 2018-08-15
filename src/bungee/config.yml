@@ -24,3 +24,7 @@ mysql:
 
 file:
   path: '/databases'
+  
+  server:
+    # Hostport
+    port: 8000

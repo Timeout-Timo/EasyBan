@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import de.timeout.bukkit.netty.handlers.PacketEncoder;
 import de.timeout.bungee.ban.manager.FileExecutorManager;
 import de.timeout.bungee.ban.manager.SQLExecutorManager;
 import de.timeout.bungee.ban.manager.WrapperManager;
+import de.timeout.bungee.ban.netty.PacketHandler;
 import de.timeout.bungee.ban.utils.TabCompleterManager;
+import de.timeout.bungee.netty.Server;
+import de.timeout.bungee.netty.handlers.PacketDecoder;
 import de.timeout.utils.MySQL;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -21,6 +25,7 @@ public class BanSystem extends Plugin implements Listener {
 	
 	public static BanSystem plugin;
 	private static Configuration config;
+	private Server server;
 	
 	private boolean ip;
 	private boolean file;
@@ -48,6 +53,12 @@ public class BanSystem extends Plugin implements Listener {
 		} else if(database.equalsIgnoreCase("file")) {
 			file = true;
 			ConfigCreator.loadDatabases();
+			
+			try {
+				server = new Server(new PacketHandler(), new PacketDecoder(), new PacketEncoder());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 	}
 
@@ -61,6 +72,10 @@ public class BanSystem extends Plugin implements Listener {
 		if(MySQL.isConnected())BungeeCord.getInstance().getPluginManager().registerListener(this, new SQLExecutorManager());
 		else BungeeCord.getInstance().getPluginManager().registerListener(this, new FileExecutorManager());
 		BungeeCord.getInstance().getPluginManager().registerListener(this, new TabCompleterManager());
+	}
+	
+	public Server getNettyServer() {
+		return server;
 	}
 		
 	private void setupMySQL() {

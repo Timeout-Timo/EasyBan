@@ -17,13 +17,18 @@ import de.timeout.bukkit.ban.gui.AddreasonGUI;
 import de.timeout.bukkit.ban.gui.BanCommandGUI;
 import de.timeout.bukkit.ban.gui.MuteCommandGUI;
 import de.timeout.bukkit.ban.manager.ExecutorManager;
+import de.timeout.bukkit.ban.netty.PacketHandler;
 import de.timeout.bukkit.ban.utils.UTFConfig;
+import de.timeout.bukkit.netty.Client;
+import de.timeout.bukkit.netty.handlers.PacketDecoder;
+import de.timeout.bukkit.netty.handlers.PacketEncoder;
 import de.timeout.utils.MySQL;
 
 public class BanGUI extends JavaPlugin {
 	
 	public static BanGUI plugin;
 	private UTFConfig config;
+	private Client client;
 	
 	private boolean bungeecord;
 	private boolean ip;
@@ -37,8 +42,12 @@ public class BanGUI extends JavaPlugin {
 		bungeecord = getConfig().getBoolean("bungeecord");
 		ip = getConfig().getBoolean("ip");
 		String database = getConfig().getString("database");
-		
-		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BanSystem");
+				
+		if(bungeecord) {
+			try {
+				new Client(new PacketHandler(), new PacketDecoder(), new PacketEncoder());
+			} catch (Exception e) {e.printStackTrace();}
+		}
 
 		//MySQL
 		if(database.equalsIgnoreCase("sql") || database.equalsIgnoreCase("mysql")) {
@@ -66,6 +75,10 @@ public class BanGUI extends JavaPlugin {
 			MySQL.disconnect();
 			Bukkit.getConsoleSender().sendMessage(getLanguage("prefix") + getLanguage("mysql.disconnected"));
 		}
+	}
+	
+	public Client getNettyClient() {
+		return client;
 	}
 	
 	public boolean isBungeeCordEnabled() {

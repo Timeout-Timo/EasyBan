@@ -1,6 +1,10 @@
 package de.timeout.bukkit.ban.utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -8,6 +12,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
 public class ItemStackAPI {
 
@@ -67,5 +73,31 @@ public class ItemStackAPI {
 		ItemMeta meta = item.getItemMeta();
 		meta.removeEnchant(ench);
 		item.setItemMeta(meta);
+	}
+	
+	@SuppressWarnings("resource")
+	public static String encodeItemStack(ItemStack item) {
+		try {
+			ByteArrayOutputStream str = new ByteArrayOutputStream();
+			BukkitObjectOutputStream data = new BukkitObjectOutputStream(str);
+			data.writeObject(item);
+			return Base64.getEncoder().encodeToString(str.toByteArray());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("resource")
+	public static ItemStack decodeItemStack(String base64) {
+		try {
+			ByteArrayInputStream str = new ByteArrayInputStream(Base64.getDecoder().decode(base64));
+			BukkitObjectInputStream data = new BukkitObjectInputStream(str);
+			ItemStack item = (ItemStack) data.readObject();
+			return item;
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
