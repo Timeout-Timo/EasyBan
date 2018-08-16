@@ -37,7 +37,7 @@ public class BanManager {
 		long violences = BungeeSQLManager.getPlayerViolences(uuid);
 		DecidationManager.updateHistory(uuid, violences + reason.getViolencePoints());
 		
-		BanEvent event = new BanEvent(main.isIPBanEnabled() ? ip : null, uuid, name, banner, reason);
+		BanEvent event = new BanEvent(main.isIPBanEnabled() && ip != null ? ip : null, uuid, name, banner, reason);
 		main.getProxy().getPluginManager().callEvent(event);
 		
 		DecidationManager.addBan(event.getPunishedUUID(), event.getPunishedIP(), event.getPunishedName(), event.getDuration(), event.getReason().getName(), event.getPunisher());

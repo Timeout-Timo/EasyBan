@@ -11,13 +11,12 @@ import de.timeout.bungee.ban.utils.TabCompleterManager;
 import de.timeout.utils.MySQL;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
-public class BanSystem extends Plugin implements Listener {
+public class BanSystem extends Plugin {
 	
 	public static BanSystem plugin;
 	private static Configuration config;

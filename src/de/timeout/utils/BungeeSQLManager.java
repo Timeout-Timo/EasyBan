@@ -443,7 +443,7 @@ public class BungeeSQLManager {
 					e.printStackTrace();
 				}
 			}
-		} else if(isBannedByIP(ip)) {
+		} else if(ip != null && isBannedByIP(ip)) {
 			long oldtime = getBanTime(ip);
 			if(oldtime > 0) {
 				try {
@@ -465,8 +465,8 @@ public class BungeeSQLManager {
 				ps.setString(1, uuid.toString());
 				ps.setString(2, ip);
 				ps.setString(3, name);
-				ps.setLong(4, bantime > 0 ? System.currentTimeMillis() + bantime : bantime);
-				ps.setString(5, reason);
+				ps.setString(4, reason);
+				ps.setLong(5, bantime > 0 ? System.currentTimeMillis() + bantime : bantime);
 				ps.setString(6, banner);
 				ps.execute();
 			} catch (SQLException e) {
@@ -492,7 +492,7 @@ public class BungeeSQLManager {
 					e.printStackTrace();
 				}
 			}
-		} else if(isMutedByIP(ip)) {
+		} else if(ip != null && isMutedByIP(ip)) {
 			long oldtime = getMuteTime(ip);
 			if(oldtime > 0) {
 				try {
@@ -514,8 +514,8 @@ public class BungeeSQLManager {
 				ps.setString(1, uuid.toString());
 				ps.setString(2, ip);
 				ps.setString(3, name);
-				ps.setLong(4, mutetime > 0 ? mutetime + System.currentTimeMillis() : mutetime);
-				ps.setString(5, reason);
+				ps.setString(4, reason);
+				ps.setLong(5, mutetime > 0 ? mutetime + System.currentTimeMillis() : mutetime);
 				ps.setString(6, muter);
 				ps.execute();
 			} catch (SQLException e) {

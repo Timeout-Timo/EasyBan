@@ -29,7 +29,7 @@ public class SQLExecutorManager implements Listener {
 			if((millis >= ipban && millis >= uuidban) && uuidban > -1 && ipban > -1) {
 				BungeeSQLManager.unbanPlayer(ip);
 				BungeeSQLManager.unbanPlayer(uuid);
-			} else if(millis < uuidban) {
+			} else if(millis < uuidban || uuidban == -1) {
 				String reason = BungeeSQLManager.getBanReason(uuid);
 				String banner = BungeeSQLManager.getBanner(uuid);
 				List<String> list = ConfigManager.getLanguage().getStringList("ban.screen");
